@@ -1,6 +1,6 @@
 {
   "name": "@s0cks/docker-chromium-screenshot",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "private": true,
   "description": "Create a screenshot using Playwright",
   "main": "index.js",
