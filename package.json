@@ -1,0 +1,27 @@
+{
+  "name": "@s0cks/docker-chromium-screenshot",
+  "version": "0.0.1",
+  "private": true,
+  "description": "Create a screenshot using Playwright",
+  "main": "index.js",
+  "scripts": {
+    "serve": "node server/index.js",
+    "capture": "node capture/index.js"
+  },
+  "keywords": [
+    "docker",
+    "playwright",
+    "chromium",
+    "screenshot",
+    "utility"
+  ],
+  "author": "s0cks",
+  "license": "MIT",
+  "packageManager": "pnpm@10.28.1",
+  "devDependencies": {
+    "playwright": "^1.61.0"
+  },
+  "dependencies": {
+    "express": "^5.2.1"
+  }
+}

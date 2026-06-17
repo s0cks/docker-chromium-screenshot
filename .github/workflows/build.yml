@@ -1,0 +1,38 @@
+name: build image
+on:
+  push:
+    tags: ["v*"]
+env:
+  REGISTRY: ghcr.io
+  IMAGE_NAME: ${{ github.repository }}
+jobs:
+  build-and-push:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
+    steps:
+      - name: checkout repository
+        uses: actions/checkout@v4
+      - name: login to ghcr
+        uses: docker/login-actions@v3
+        with:
+          registry: ${{ env.REGISTRY }}
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+      - name: extract metadata
+        id: meta
+        uses: docker/metadata-action@v5
+        with:
+          images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
+          tags: |
+            type=ref,event=branch
+            type=semver,pattern={{version}}
+            type=raw,value=latest,enable=${{ github.ref == 'refs/heads/main' }}
+      - name: build and push
+        uses: docker/build-push-action@v6
+        with:
+          context: .
+          push: true
+          labels: ${{ steps.meta.output.labels }}
+          tags: ${{ steps.meta.outputs.tags }}
