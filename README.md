@@ -43,3 +43,7 @@ sequenceDiagram
     Shell->>Exp: Stop server (kill $SERVER_PID)
     Note over Shell: Exit with EXIT_CODE
 ```
+
+## License
+
+See [LICENSE](/LICENSE)
