@@ -9,13 +9,12 @@ LABEL org.label-schema.description="Playwright screenshot image" \
       org.label-schema.vendor="" \
       org.label-schema.version="latest"
 
-RUN apt-get update && apt-get install -y netcat-openbsd
+RUN apt-get update \
+ && apt-get install -y netcat-openbsd # TODO(@s0cks): remove netcat for curl
 
 WORKDIR /app
-COPY package.json .
-RUN npm install
+COPY . .
+RUN npm install \
+ && chmod +x entrypoint.sh
 
-COPY . public/ server/ capture/ .
-RUN chmod +x start.sh
-
-CMD [ "/app/start.sh" ]
+CMD [ "/app/entrypoint.sh" ]

@@ -1,0 +1,34 @@
+@use 'mixins' as mixins;
+
+@mixin title-text($size) {
+  margin: 0;
+  padding: 0;
+  font-family: var(--font-display);
+  font-size: $size;
+  line-height: calc($size + 2px);
+  font-variant: small-caps;
+}
+
+body > header {
+  @include mixins.frame-row-top;
+  @include mixins.aligned(left);
+
+  max-height: var(--header-max-height);
+  gap: 0.5rem;
+  padding: 0.5em 1em;
+
+  div.logo {
+    flex: 0;
+    @include mixins.circular;
+
+    img {
+      object-fit: contain;
+      @include mixins.circular;
+    }
+  }
+
+  h1 {
+    flex: 1;
+    @include title-text(74px);
+  }
+}

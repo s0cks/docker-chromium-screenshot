@@ -1,0 +1,16 @@
+---
+import Deeplink from './Deeplink.astro';
+import Publication from './Publication.astro';
+import Metadata from './Metadata.astro';
+const { meta } = Astro.props;
+---
+<footer>
+  <Publication publication={meta.publication} author={meta.author} />
+
+  <Metadata
+    commit={meta.commit}
+    timestamp={meta.timestamp}
+    repository={meta.repository || undefined} />
+
+  <Deeplink link={meta.article} />
+</footer>

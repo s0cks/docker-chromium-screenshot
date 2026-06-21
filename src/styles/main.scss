@@ -1,0 +1,156 @@
+@use 'variables' as vars;
+@use 'mixins' as mixins;
+@use "sass:map";
+
+@use 'cards';
+@use 'header';
+@use 'footer';
+
+@import url('https://googleapis.com');
+
+@mixin inject-tokens($map) {
+  @each $key, $value in $map {
+    --flx-#{$key}: #{$value};
+  }
+}
+
+:root {
+  @media (prefers-color-scheme: dark) {
+    @include inject-tokens(vars.$flexoki-dark);
+
+    --accent: var(--flx-pu-2);
+    --accent-light: var(--flx-pu);
+  }
+  @media (prefers-color-scheme: light) {
+    @include inject-tokens(vars.$flexoki-light);
+
+    --accent: var(--flx-pu);
+    --accent-light: var(--flx-pu-2);
+  }
+
+  --bg-color-main: var(--flx-bg);
+  --bg-color-secondary: var(--flx-bg-2);
+
+  --border-color-default: var(--flx-ui);
+  --border-color-hovered: var(--flx-ui-2);
+  --border-color-active: var(--flx-ui-3);
+
+  --text-color-primary: var(--flx-tx);
+  --text-color-muted: var(--flx-tx-2);
+  --text-color-faint: var(--flx-tx-3);
+  --text-color-error: var(--flx-re);
+  --text-color-warn: var(--flx-or);
+  --text-color-success: var(--flx-gr);
+
+  --font-display: 'Bebas Neue', sans-serif;
+  --font-sans: 'Inter', sans-serif;
+  --font-editorial: 'Cormorant Garamond', serif;
+  --font-alt: 'Alegreya Sans', sans-serif;
+
+  --font-size-default: 16px;
+
+  --border-width: 0.5px;
+
+  --header-max-height: 13.5vh;
+  --header-pad: vars.$grid-pad;
+
+  --footer-max-height: 13.5vh;
+  --footer-pad: vars.$grid-pad;
+
+  --grid-spacing: 0.5em;
+
+  --card-border-size: 1.5px;
+  --card-border-radius: 0.5rem;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  margin: 0;
+  padding: 0;
+  width: 100vw;
+  height: 100vh;
+  overflow: hidden;
+
+  font-size: var(--font-size-default);
+  font-family: var(--font-sans);
+
+  color: var(--text-color-primary);
+  background-color: var(--bg-color-main);
+}
+
+html{
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+
+  &[data-theme="dark"] {
+    @include inject-tokens(vars.$flexoki-dark);
+  }
+
+  &[data-theme="light"]{
+    @include inject-tokens(vars.$flexoki-light);
+  }
+}
+
+@mixin grid-template($num-rows, $num-cols) {
+  grid-auto-rows: minmax(0, 1fr);
+  grid-template-rows: repeat($num-rows, minmax(0, 1fr));
+  grid-template-columns: repeat($num-cols, minmax(0, 1fr));
+}
+
+body {
+  display: flex;
+  flex-direction: column;
+
+  & > main {
+    width: 100%;
+    height: 100%;
+
+    display: grid;
+    gap: var(--grid-spacing);
+    padding: var(--grid-spacing);
+    grid-auto-flow: dense;
+
+    @include mixins.lg-size-only {
+      @include grid-template(vars.$grid-num-rows, vars.$grid-num-cols);
+    }
+
+    @include mixins.sm-size-only {
+      @include grid-template(0, 0);
+    }
+  }
+}
+
+@for $level from 1 through 6 {
+  h#{$level} {
+    @include mixins.text-colorizer;
+  }
+}
+
+p,
+span,
+small,
+data,
+output {
+  @include mixins.text-colorizer;
+
+  &.kpi {
+    color: var(--accent);
+    font-weight: 800;
+  }
+
+  &.ind {
+    & > * {
+      color: var(--text-color-muted);
+    }
+
+    & > .trend {
+      font-weight: 600;
+      &.positive { @include mixins.text-color(success); }
+      &.negative { @include mixins.text-color(error); }
+    }
+  }
+}

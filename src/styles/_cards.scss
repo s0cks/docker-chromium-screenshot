@@ -1,0 +1,121 @@
+@use 'variables' as vars;
+@use 'mixins' as mixins;
+
+@for $w from 1 through vars.$grid-num-cols {
+  @for $h from 1 through vars.$grid-num-rows {
+    .card-#{$w}x#{$h} {
+      @media(min-width: #{vars.$grid-breakpoint + 1px}) {
+        grid-column: span $w;
+        grid-row: span $h;
+      }
+    }
+  }
+}
+
+$card-pad: 0.75vw;
+
+@mixin border-color($name) {
+  border-color: var(--border-color-#{$name});
+}
+
+@mixin active-border-class {
+  &.active { @include border-color(active); }
+}
+
+@mixin hovered-border-class {
+  &.hovered { @include border-color(hovered); }
+}
+
+@mixin card-border {
+  border-style: solid;
+  border-radius: var(--card-border-radius);
+  border-width: var(--card-border-size);
+  @include border-color(default);
+
+  &.highlight { border-color: var(--accent); }
+  @include active-border-class;
+  @include hovered-border-class;
+}
+
+body > main {
+  & > div,
+  & > section {
+    &.card {
+      @include mixins.centered-col;
+      overflow: hidden;
+      background-color: var(--bg-color-secondary);
+      padding-left: 1em;
+      padding-right: 1em;
+      @include card-border;
+
+      @for $level from 1 through 6 {
+        h#{$level} {
+          margin: 0;
+          padding: 0;
+          font-family: var(--font-alt);
+
+          overflow: hidden;
+          white-space: nowrap;
+          text-overflow: ellipsis;
+
+          @include mixins.heading($level);
+        }
+      }
+
+      & > header,
+      & > main,
+      & > footer {
+        display: flex;
+      }
+
+      & > header,
+      & > footer {
+        flex: 0;
+        flex-direction: row;
+        width: 100%;
+      }
+
+      & > header {
+        @include mixins.aligned(left);
+        @include mixins.hide-on-small;
+        padding-top: 0.5em;
+        padding-bottom: 0.5em;
+        padding-left: 1em;
+        border-bottom: 0.15em solid var(--border-color-default);
+      }
+
+      & > main {
+        flex: 1;
+        flex-direction: column;
+        @include mixins.aligned(center);
+
+        @media(max-width: #{vars.$grid-breakpoint}) {
+          padding-top: 0.5em;
+        }
+
+        small {
+          font-size: 0.75em;
+          @include mixins.text-color(muted);
+        }
+      }
+
+      & > footer {
+        @include mixins.aligned(center);
+        padding-bottom: 0.5em;
+
+        p,
+        span,
+        small,
+        data,
+        output {
+          color: var(--text-color-muted);
+        }
+
+        @media(min-width: #{vars.$grid-breakpoint + 1px}) {
+          padding-top: 0.5em;
+          border-top: 0.15em solid var(--border-color-default);
+        }
+      }
+    }
+  }
+}

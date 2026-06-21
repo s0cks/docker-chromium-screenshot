@@ -1,0 +1,37 @@
+---
+import '../styles/main.scss';
+import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
+import Content from '../components/Content.astro';
+
+let meta = undefined;
+
+try {
+const response = await fetch(`http://localhost:${process.env.PORT || 3000}/api/v1/meta`);
+  meta = await response.json();
+} catch(error) {
+  console.error(`error:`, error);
+  meta = {
+    commit: "sha2",
+    build: 0,
+    timestamp: new Date().toISOString(),
+    publication: "Shadow Sovereignty: The Epstein Class & Industrial Impunity",
+    title: "Test Article",
+    author: "s0cks",
+    article: "https://substack.com",
+  }
+}
+---
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Card</title>
+  </head>
+  <body>
+    <Header meta={meta} />
+    <Content meat={meta} />
+    <Footer meta={meta}/>
+  </body>
+</html>

@@ -1,0 +1,18 @@
+---
+import QRCode from 'qrcode';
+const { link, message = "Scan for article" } = Astro.props;
+const qr = await QRCode.toString(link, {
+  type: 'svg',
+  version: 2,
+  errorCorrectionLevel: 'L',
+  margin: 0,
+  color: {
+    light: '#100F0F',
+    dark: '#CECDC3',
+  },
+});
+---
+<div class="qr">
+  <span class="faint">Scan for article</span>
+  <Fragment set:html={qr} />
+</div>

@@ -4,7 +4,12 @@
   "private": true,
   "description": "Create a screenshot using Playwright",
   "main": "index.js",
+  "type": "module",
   "scripts": {
+    "clean": "rm -rf dist",
+    "dev": "pnpm run open && astro dev",
+    "build": "astro build",
+    "open": "open-cli http://localhost:4321",
     "serve": "node server/index.js",
     "capture": "node capture/index.js"
   },
@@ -19,9 +24,19 @@
   "license": "MIT",
   "packageManager": "pnpm@10.28.1",
   "devDependencies": {
-    "playwright": "^1.61.0"
+    "concurrently": "^10.0.3",
+    "connect-livereload": "^0.6.1",
+    "gulp": "^5.0.1",
+    "gulp-sass": "^6.0.1",
+    "livereload": "^0.10.3",
+    "nodemon": "^3.1.14",
+    "open-cli": "^9.0.0",
+    "playwright": "^1.61.0",
+    "sass": "^1.101.0"
   },
   "dependencies": {
-    "express": "^5.2.1"
+    "astro": "^4.11.0",
+    "express": "^5.2.1",
+    "qrcode": "^1.5.4"
   }
 }

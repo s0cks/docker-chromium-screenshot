@@ -1,0 +1,28 @@
+---
+const { 
+  commit = "00", 
+  timestamp = (new Date().toISOString()),
+  repository = undefined,
+} = Astro.props;
+---
+<div class="meta">
+  <div class="commit faint">
+    <span class="faint">
+      Commit:
+    </span>
+    <span class="faint">
+      {commit}
+    </span>
+  </div>
+
+  <div class="timestamp faint">
+    <span class="faint">
+      Timestamp:
+    </span>
+    <span class="faint">
+      {timestamp}
+    </span>
+  </div>
+
+  {repository !== undefined && <span class="faint">{repository}</span>}
+</div>

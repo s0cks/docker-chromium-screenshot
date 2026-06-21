@@ -1,5 +1,7 @@
 screenshot*.png
 out/
+.astro/
+card/
 
 # Logs
 logs

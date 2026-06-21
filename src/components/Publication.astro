@@ -1,0 +1,10 @@
+---
+const { publication, author } = Astro.props;
+const year = (new Date().getFullYear());
+---
+<div class="posh">
+  <h5 class="muted">{publication}</h5>
+  <span class="copyright faint">
+    {year} @{author}
+  </span>
+</div>

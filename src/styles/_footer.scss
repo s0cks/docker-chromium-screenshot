@@ -1,0 +1,110 @@
+@use 'variables' as vars;
+@use 'mixins' as mixins;
+
+$grid-breakpoint: 768px;
+
+@mixin qr($size, $margin) {
+  display: flex;
+  justify-content: flex-end;
+  gap: calc($margin * 2);
+  margin: $margin;
+
+  & > * {
+    min-width: $size;
+  }
+
+  // label
+  & > span {
+    flex: 1;
+    display: inline-flex;
+    text-align: right;
+    align-items: center;
+  }
+
+  // image
+  & > svg,
+  & > img {
+    flex: 0;
+    border: var(--card-border-size) solid var(--accent-light);
+    aspect-ratio: 1 / 1;
+  }
+}
+
+body > footer {
+  @include mixins.frame-row-bottom;
+  align-items: center;
+  justify-content: flex-start !important;
+  max-height: var(--footer-max-height);
+
+  div.qr {
+    @include qr(5rem, var(--grid-spacing));
+  }
+
+  div.meta {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    padding: 1rem;
+    gap: 0.5rem;
+
+    div,
+    span{
+      height: 100%;
+      display: flex;
+      flex-direction: row;
+      justify-content: flex-start;
+      gap: 1rem;
+
+      @include mixins.hide-on-small;
+
+      span {
+        display: inline-flex;
+        align-items: center;
+        text-align: center;
+      }
+    }
+  }
+
+  p,
+  span {
+    color: var(--flx-tx);
+    font-family: "Alegreya Sans";
+  }
+
+  .posh {
+    flex: 0;
+    padding: 0.5em;
+    @include mixins.centered-col;
+
+    @media(max-width: #{$grid-breakpoint}) {
+      min-width: 30vw;
+    }
+
+    @media(min-width: #{$grid-breakpoint + 1}) {
+      min-width: 15vw;
+    }
+
+    * {
+      display: inline-flex;
+      flex-direction: column;
+      margin: 0;
+      padding: 0;
+      width: 100%;
+      text-align: center;
+    }
+
+    @mixin publication-title {
+      justify-content: flex-end;
+    }
+
+    @for $level from 1 through 6 {
+      h#{$level} {
+        @include publication-title;
+      }
+    }
+
+    span {
+      justify-content: flex-start;
+    }
+  }
+}

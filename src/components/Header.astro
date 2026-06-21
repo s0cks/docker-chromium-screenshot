@@ -1,0 +1,8 @@
+---
+import Logo from './Logo.astro';
+const { meta } = Astro.props;
+---
+<header>
+  <Logo src="logo-256x256.png" />
+  <h1 class="article">{meta.title}</h1>
+</header>
