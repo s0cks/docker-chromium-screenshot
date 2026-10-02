@@ -1,0 +1,12 @@
+---
+import { mdi } from '../../lib/dossier.js';
+const { data } = Astro.props;
+const items = Array.isArray(data) ? data : (data.items ?? []);
+const title = Array.isArray(data) ? 'Sources' : (data.title ?? 'Sources');
+---
+<div class="sources">
+  <h6>{title}</h6>
+  <ol>
+    {items.map((s) => <li set:html={mdi(typeof s === 'string' ? s : [s.text, s.url].filter(Boolean).join(' \u00b7 '))} />)}
+  </ol>
+</div>

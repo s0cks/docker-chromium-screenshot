@@ -1,0 +1,16 @@
+---
+import Base from '../../layouts/Base.astro';
+import Slide from '../../components/Slide.astro';
+import { loadDossiers } from '../../lib/dossier.js';
+
+// All slides of a dossier on one page, one per printed page (used for --pdf).
+export function getStaticPaths() {
+  return loadDossiers().map((dossier) => ({ params: { dossier: dossier.id }, props: { dossier } }));
+}
+const { dossier } = Astro.props;
+const { width, height } = dossier.size;
+---
+<Base title={`${dossier.meta.title} (print)`} theme={dossier.meta.theme} accent={dossier.meta.accent} width={width} height={height} cardId={dossier.id}>
+  <style is:global set:html={`@page { size: ${width}px ${height}px; margin: 0 } html, body { margin: 0 } .slide { break-after: page; break-inside: avoid } .slide:last-child { break-after: auto }`} />
+  {dossier.slides.map((slide) => <Slide dossier={dossier} slide={slide} />)}
+</Base>

@@ -1,0 +1,162 @@
+---
+import { areaPath, donutArcs, fmt, linePath, niceAxis, toneColor } from '../../lib/chart.js';
+
+const { data, attrs } = Astro.props;
+const type = attrs.type ?? data.type ?? 'bar';
+const half = attrs.w === 'half';
+const vw = half ? 430 : 880;
+const vh = Number(attrs.h ?? data.h ?? (half ? 250 : 300));
+const format = data.format ?? {};
+const showLabels = data.labels ?? true;
+
+const xs = data.x ?? [];
+const series = (data.series ?? []).map((s, i) => ({ ...s, color: toneColor(s.tone, i) }));
+const items = (data.items ?? []).map((s, i) => ({ ...s, color: toneColor(s.tone, i) }));
+
+// ---------- cartesian geometry (bar, line, area) ----------
+const m = { l: 46, r: 14, t: 26, b: 30 };
+const pw = vw - m.l - m.r;
+const ph = vh - m.t - m.b;
+const stacked = Boolean(data.stacked);
+const isLine = type === 'line' || type === 'area';
+const allVals = series.flatMap((s) => s.values);
+const dataMax = stacked && series.length
+  ? Math.max(...xs.map((_, i) => series.reduce((a, s) => a + (s.values[i] ?? 0), 0)))
+  : Math.max(0, ...allVals);
+
+const axis = niceAxis(data.max ?? dataMax * (showLabels && !isLine ? 1.08 : 1), 4, { min: isLine ? (data.min ?? 0) : 0, max: data.max });
+axis.scale.range([m.t + ph, m.t]); // pixel space: axis.min at the bottom
+const y = (v) => axis.scale(v);
+const band = xs.length ? pw / xs.length : pw;
+const cx = (i) => m.l + band * i + band / 2;
+const lx = (i) => (xs.length > 1 ? m.l + 14 + ((pw - 28) * i) / (xs.length - 1) : m.l + pw / 2);
+
+const annotations = (data.annotations ?? []).map((a) => {
+  const i = typeof a.x === 'number' && !xs.includes(a.x) ? a.x : xs.findIndex((v) => String(v) === String(a.x));
+  return { ...a, i };
+}).filter((a) => a.i >= 0);
+
+const barGroups = xs.map((label, i) => {
+  const n = series.length;
+  const groupW = Math.min(band * 0.74, 64 * n);
+  const w = stacked ? groupW : groupW / n;
+  let acc = 0;
+  return {
+    label,
+    bars: series.map((s, k) => {
+      const v = s.values[i] ?? 0;
+      const x = stacked ? cx(i) - groupW / 2 : cx(i) - groupW / 2 + k * w;
+      const y0 = stacked ? acc : 0;
+      if (stacked) acc += v;
+      return { x, w: Math.max(2, w - (stacked ? 0 : 2)), top: y(y0 + v), bottom: y(y0), v, color: s.color };
+    }),
+  };
+});
+
+// end labels: the highest series labels above its last point, the rest below
+const lastVals = series.map((s) => s.values.at(-1));
+const endBelow = series.map((_, i) => lastVals[i] < Math.max(...lastVals));
+
+// ---------- hbar ----------
+const hmax = Math.max(0, ...items.map((s) => s.value));
+
+// ---------- donut ----------
+const R = 78;
+const total = items.reduce((a, s) => a + s.value, 0) || 1;
+const arcs = items.length ? donutArcs(items.map((s) => s.value), { innerRadius: R - 30, outerRadius: R }) : [];
+const legend = data.legend ?? series.length > 1;
+---
+<figure class="chart" style={`margin:0; --kw:${half ? '40%' : '28%'}`}>
+  {data.title && <div class="chart-title">{data.title}</div>}
+
+  {legend && type !== 'donut' && type !== 'hbar' && (
+    <div class="legend">{series.map((s) => <span><i style={`--c:${s.color}`}></i>{s.name}</span>)}</div>
+  )}
+
+  {(type === 'bar') && (
+    <svg viewBox={`0 0 ${vw} ${vh}`} role="img" aria-label={data.title ?? 'bar chart'}>
+      {axis.ticks.map((t) => (
+        <>
+          <line class="grid-line" x1={m.l} x2={vw - m.r} y1={y(t)} y2={y(t)} />
+          <text class="ax" x={m.l - 8} y={y(t) + 4} text-anchor="end">{fmt(t, format)}</text>
+        </>
+      ))}
+      {barGroups.map((g, gi) => (
+        <>
+          {g.bars.map((b) => (
+            <>
+              <rect x={b.x} y={b.top} width={b.w} height={Math.max(0, b.bottom - b.top)} fill={b.color} />
+              {showLabels && !stacked && <text class="val" x={b.x + b.w / 2} y={b.top - 6} text-anchor="middle">{fmt(b.v, format)}</text>}
+            </>
+          ))}
+          <text class="ax" x={cx(gi)} y={vh - 8} text-anchor="middle">{g.label}</text>
+        </>
+      ))}
+      <line class="base-line" x1={m.l} x2={vw - m.r} y1={y(axis.min)} y2={y(axis.min)} />
+      {annotations.map((a) => (
+        <>
+          <line class="ann-line" x1={cx(a.i)} x2={cx(a.i)} y1={m.t - 8} y2={y(axis.min)} />
+          <text class="ann" x={cx(a.i) + (a.i > xs.length / 2 ? -6 : 6)} y={m.t - 2} text-anchor={a.i > xs.length / 2 ? 'end' : 'start'}>{a.text}</text>
+        </>
+      ))}
+    </svg>
+  )}
+
+  {isLine && (
+    <svg viewBox={`0 0 ${vw} ${vh}`} role="img" aria-label={data.title ?? 'line chart'}>
+      {axis.ticks.map((t) => (
+        <>
+          <line class="grid-line" x1={m.l} x2={vw - m.r} y1={y(t)} y2={y(t)} />
+          <text class="ax" x={m.l - 8} y={y(t) + 4} text-anchor="end">{fmt(t, format)}</text>
+        </>
+      ))}
+      {xs.map((label, i) => <text class="ax" x={lx(i)} y={vh - 8} text-anchor="middle">{label}</text>)}
+      {annotations.map((a) => (
+        <>
+          <line class="ann-line" x1={lx(a.i)} x2={lx(a.i)} y1={m.t - 8} y2={y(axis.min)} />
+          <text class="ann" x={lx(a.i) + (a.i > xs.length / 2 ? -6 : 6)} y={m.t - 2} text-anchor={a.i > xs.length / 2 ? 'end' : 'start'}>{a.text}</text>
+        </>
+      ))}
+      {series.map((s, si) => (
+        <>
+          {type === 'area' && <path d={areaPath(s.values, lx, y, axis.min)} fill={s.color} fill-opacity="0.16" />}
+          <path d={linePath(s.values, lx, y)} fill="none" stroke={s.color} stroke-width="3" stroke-linejoin="round" stroke-linecap="round" />
+          {s.values.map((v, i) => <circle class="bg-dot" cx={lx(i)} cy={y(v)} r="4.5" fill={s.color} />)}
+          {showLabels && (
+            <text class="val" x={lx(s.values.length - 1)} y={y(s.values.at(-1)) + (endBelow[si] ? 22 : -11)} text-anchor="end" style={`fill:${s.color}`}>{fmt(s.values.at(-1), format)}</text>
+          )}
+        </>
+      ))}
+      <line class="base-line" x1={m.l} x2={vw - m.r} y1={y(axis.min)} y2={y(axis.min)} />
+    </svg>
+  )}
+
+  {type === 'hbar' && (
+    <div class="hbars">
+      {items.map((s) => (
+        <div class="hbar" data-tone={s.tone}>
+          <span class="k">{s.label}</span>
+          <span class="track"><span class="fill" style={`display:block; --pct:${(s.value / (hmax || 1)) * 100}%; background:${s.color}`}></span></span>
+          <span class="num">{fmt(s.value, format)}</span>
+        </div>
+      ))}
+    </div>
+  )}
+
+  {type === 'donut' && (
+    <div class="donut" data-size={half ? 'sm' : 'md'}>
+      <svg viewBox={`${-R} ${-R} ${R * 2} ${R * 2}`} role="img" aria-label={data.title ?? 'donut chart'}>
+        {arcs.map((a, i) => <path d={a.path} fill={items[i].color} />)}
+        {data.center && <text class="donut-c" x="0" y="4" text-anchor="middle">{data.center.value}</text>}
+        {data.center?.label && <text class="donut-l" x="0" y="24" text-anchor="middle">{String(data.center.label).toUpperCase()}</text>}
+      </svg>
+      <ul>
+        {items.map((s) => (
+          <li><i style={`--c:${s.color}`}></i><span>{s.label}</span><span class="pct">{data.show === 'value' ? fmt(s.value, format) : `${Math.round((s.value / total) * 100)}%`}</span></li>
+        ))}
+      </ul>
+    </div>
+  )}
+
+  {data.source && <div class="chart-note">{Array.isArray(data.source) ? data.source.join(' \u00b7 ') : data.source}</div>}
+</figure>

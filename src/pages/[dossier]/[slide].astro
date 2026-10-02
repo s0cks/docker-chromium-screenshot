@@ -1,0 +1,26 @@
+---
+import Base from '../../layouts/Base.astro';
+import Slide from '../../components/Slide.astro';
+import { loadDossiers, pad } from '../../lib/dossier.js';
+
+export function getStaticPaths() {
+  return loadDossiers().flatMap((dossier) =>
+    dossier.slides.map((slide) => ({
+      params: { dossier: dossier.id, slide: pad(slide.index + 1) },
+      props: { dossier, slide },
+    })),
+  );
+}
+
+const { dossier, slide } = Astro.props;
+---
+<Base
+  title={`${dossier.meta.title} ${pad(slide.index + 1)}/${pad(dossier.slides.length)}`}
+  theme={dossier.meta.theme}
+  accent={dossier.meta.accent}
+  width={dossier.size.width}
+  height={dossier.size.height}
+  cardId={dossier.id}
+>
+  <Slide dossier={dossier} slide={slide} />
+</Base>

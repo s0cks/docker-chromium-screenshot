@@ -1,0 +1,175 @@
+/*
+ * Brand tokens: Flexoki (https://stephango.com/flexoki) in light and dark.
+ *
+ * Flexoki pairs every hue as a 600 (deep) and a 400 (bright) step. Text and
+ * lines use the step that contrasts with the theme's paper: 600 on light,
+ * 400 on dark. Solid fills always use 600 with paper-coloured text, so a
+ * filled block reads the same in both themes.
+ *
+ * Tone vocabulary (what colour MEANS in a dossier):
+ *   red      adverse, charged, contradicted
+ *   orange   brand accent, open item, needs attention
+ *   yellow   alleged, unverified, caution
+ *   green    confirmed, corroborated, positive
+ *   cyan     context, background fact
+ *   blue     primary evidence, neutral data
+ *   purple   pending, scheduled, watch
+ *   magenta  outlier, special mention
+ *   ink      neutral
+ */
+
+:root {
+  /* Flexoki base scale */
+  --paper: #fffcf0;
+  --black: #100f0f;
+  --b50: #f2f0e5;
+  --b100: #e6e4d9;
+  --b150: #dad8ce;
+  --b200: #cecdc3;
+  --b300: #b7b5ac;
+  --b500: #878580;
+  --b600: #6f6e69;
+  --b700: #575653;
+  --b800: #403e3c;
+  --b850: #343331;
+  --b900: #282726;
+  --b950: #1c1b1a;
+
+  /* Flexoki hues, 600 = deep, 400 = bright */
+  --red-600: #af3029;     --red-400: #d14d41;
+  --orange-600: #bc5215;  --orange-400: #da702c;
+  --yellow-600: #ad8301;  --yellow-400: #d0a215;
+  --green-600: #66800b;   --green-400: #879a39;
+  --cyan-600: #24837b;    --cyan-400: #3aa99f;
+  --blue-600: #205ea6;    --blue-400: #4385be;
+  --purple-600: #5e409d;  --purple-400: #8b7ec8;
+  --magenta-600: #a02f6f; --magenta-400: #ce5d97;
+
+  /* Typography */
+  --font-display: 'Newsreader', 'Iowan Old Style', Georgia, serif;
+  --font-sans: 'IBM Plex Sans', 'Helvetica Neue', Arial, sans-serif;
+  --font-mono: 'IBM Plex Mono', ui-monospace, 'SF Mono', Menlo, monospace;
+
+  /* Solid-fill text; yellow is too light for paper-coloured text */
+  --on-fill: var(--paper);
+  --yellow-on: var(--black);
+}
+
+:root,
+[data-theme='light'] {
+  --bg: var(--paper);
+  --panel: var(--b50);
+  --rule: var(--b150);
+  --rule-strong: var(--b200);
+  --ink: var(--black);
+  --ink-2: var(--b600);
+  --ink-3: var(--b300); /* decoration only: too faint for text */
+
+  --chrome: var(--black);
+  --chrome-ink: var(--paper);
+  --chrome-2: var(--b300);
+  --ink-fill: var(--black);
+  --ink-on: var(--paper);
+
+  --red: var(--red-600);
+  --orange: var(--orange-600);
+  --yellow: var(--yellow-600);
+  --green: var(--green-600);
+  --cyan: var(--cyan-600);
+  --blue: var(--blue-600);
+  --purple: var(--purple-600);
+  --magenta: var(--magenta-600);
+
+  /* the "2" step of each hue: the opposite weight, for two-tone accents
+     (a bright pu2 next to a deep pu) — always available regardless of which
+     step the theme picked as the hue's primary text colour above */
+  --red-2: var(--red-400);
+  --orange-2: var(--orange-400);
+  --yellow-2: var(--yellow-400);
+  --green-2: var(--green-400);
+  --cyan-2: var(--cyan-400);
+  --blue-2: var(--blue-400);
+  --purple-2: var(--purple-400);
+  --magenta-2: var(--magenta-400);
+}
+
+[data-theme='dark'] {
+  --bg: var(--black);
+  --panel: var(--b950);
+  --rule: var(--b900);
+  --rule-strong: var(--b850);
+  --ink: var(--b200);
+  --ink-2: var(--b500);
+  --ink-3: var(--b700);
+
+  --chrome: var(--b950);
+  --chrome-ink: var(--b200);
+  --chrome-2: var(--b500);
+  --ink-fill: var(--b850);
+  --ink-on: var(--b200);
+
+  --red: var(--red-400);
+  --orange: var(--orange-400);
+  --yellow: var(--yellow-400);
+  --green: var(--green-400);
+  --cyan: var(--cyan-400);
+  --blue: var(--blue-400);
+  --purple: var(--purple-400);
+  --magenta: var(--magenta-400);
+
+  --red-2: var(--red-600);
+  --orange-2: var(--orange-600);
+  --yellow-2: var(--yellow-600);
+  --green-2: var(--green-600);
+  --cyan-2: var(--cyan-600);
+  --blue-2: var(--blue-600);
+  --purple-2: var(--purple-600);
+  --magenta-2: var(--magenta-600);
+}
+
+/* Solid fills are theme independent */
+:root {
+  --red-fill: var(--red-600);
+  --orange-fill: var(--orange-600);
+  --yellow-fill: var(--yellow-600);
+  --green-fill: var(--green-600);
+  --cyan-fill: var(--cyan-600);
+  --blue-fill: var(--blue-600);
+  --purple-fill: var(--purple-600);
+  --magenta-fill: var(--magenta-600);
+}
+
+/*
+ * Tones. Set data-tone on any element; children read --t (text/line),
+ * --t-fill (solid background), --t-on (text on that background) and
+ * --t-tint (soft background).
+ */
+[data-tone] {
+  --t: var(--ink);
+  --t-fill: var(--ink-fill);
+  --t-on: var(--ink-on);
+  --t-tint: var(--panel);
+}
+[data-tone='ink'] { --t: var(--ink); --t-fill: var(--ink-fill); --t-on: var(--ink-on); --t-tint: var(--panel); }
+[data-tone='muted'] { --t: var(--ink-2); --t-fill: var(--b600); --t-on: var(--paper); --t-tint: var(--panel); }
+[data-tone='accent'] { --t: var(--accent); --t-fill: var(--accent-fill); --t-on: var(--accent-on); --t-tint: color-mix(in srgb, var(--accent) 12%, var(--bg)); }
+[data-tone='red'] { --t: var(--red); --t-fill: var(--red-fill); --t-on: var(--on-fill); --t-tint: color-mix(in srgb, var(--red) 12%, var(--bg)); }
+[data-tone='orange'] { --t: var(--orange); --t-fill: var(--orange-fill); --t-on: var(--on-fill); --t-tint: color-mix(in srgb, var(--orange) 12%, var(--bg)); }
+[data-tone='yellow'] { --t: var(--yellow); --t-fill: var(--yellow-fill); --t-on: var(--yellow-on); --t-tint: color-mix(in srgb, var(--yellow) 14%, var(--bg)); }
+[data-tone='green'] { --t: var(--green); --t-fill: var(--green-fill); --t-on: var(--on-fill); --t-tint: color-mix(in srgb, var(--green) 12%, var(--bg)); }
+[data-tone='cyan'] { --t: var(--cyan); --t-fill: var(--cyan-fill); --t-on: var(--on-fill); --t-tint: color-mix(in srgb, var(--cyan) 12%, var(--bg)); }
+[data-tone='blue'] { --t: var(--blue); --t-fill: var(--blue-fill); --t-on: var(--on-fill); --t-tint: color-mix(in srgb, var(--blue) 12%, var(--bg)); }
+[data-tone='purple'] { --t: var(--purple); --t-fill: var(--purple-fill); --t-on: var(--on-fill); --t-tint: color-mix(in srgb, var(--purple) 12%, var(--bg)); }
+[data-tone='magenta'] { --t: var(--magenta); --t-fill: var(--magenta-fill); --t-on: var(--on-fill); --t-tint: color-mix(in srgb, var(--magenta) 12%, var(--bg)); }
+
+/* Series colours for charts, in order */
+:root {
+  --series-1: var(--blue);
+  --series-2: var(--orange);
+  --series-3: var(--green);
+  --series-4: var(--purple);
+  --series-5: var(--cyan);
+  --series-6: var(--magenta);
+  --series-7: var(--yellow);
+  --series-8: var(--red);
+}

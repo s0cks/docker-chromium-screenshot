@@ -1,0 +1,20 @@
+---
+import { mdi } from '../../lib/dossier.js';
+const { data, attrs } = Astro.props;
+const items = Array.isArray(data) ? data : (data.items ?? []);
+const cols = attrs.cols ?? data.cols ?? Math.min(items.length, 2) ?? 2;
+const arrow = (d) => (String(d).trim().startsWith('-') || String(d).trim().startsWith('\u2212') ? '\u2193' : '\u2191');
+---
+<div class="stats" style={`--cols:${cols}`}>
+  {items.map((s) => {
+    const filled = s.tone && s.tone !== 'outline';
+    return (
+      <div class="stat" data-tone={filled ? s.tone : 'ink'} data-filled={filled ? '' : undefined}>
+        <div class="v">{s.value}</div>
+        {s.label && <div class="l" set:html={mdi(s.label)} />}
+        {s.note && <div class="n" set:html={mdi(s.note)} />}
+        {s.delta && <div class="d" data-good={s.trend}>{arrow(s.delta)} {String(s.delta).replace(/^[-\u2212+]/, '')}{s.vs ? ` ${s.vs}` : ''}</div>}
+      </div>
+    );
+  })}
+</div>

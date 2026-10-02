@@ -1,0 +1,5 @@
+---
+import { md } from '../../lib/dossier.js';
+const { md: body, attrs } = Astro.props;
+---
+<aside class="callout" data-tone={attrs.tone ?? 'ink'} data-mono={attrs.mono ? '' : undefined} set:html={md(body)} />

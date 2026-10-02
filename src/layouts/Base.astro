@@ -1,0 +1,80 @@
+---
+import '@fontsource/newsreader/latin-500.css';
+import '@fontsource/newsreader/latin-600.css';
+import '@fontsource/newsreader/latin-700.css';
+import '@fontsource/newsreader/latin-500-italic.css';
+import '@fontsource/ibm-plex-sans/latin-400.css';
+import '@fontsource/ibm-plex-sans/latin-400-italic.css';
+import '@fontsource/ibm-plex-sans/latin-500.css';
+import '@fontsource/ibm-plex-sans/latin-600.css';
+import '@fontsource/ibm-plex-sans/latin-700.css';
+import '@fontsource/ibm-plex-mono/latin-400.css';
+import '@fontsource/ibm-plex-mono/latin-500.css';
+import '@fontsource/ibm-plex-mono/latin-600.css';
+import '@fontsource/ibm-plex-mono/latin-700.css';
+import '../styles/tokens.css';
+import '../styles/base.css';
+import '../styles/chrome.css';
+import '../styles/blocks.css';
+
+interface Props {
+  title: string;
+  theme?: 'light' | 'dark';
+  accent?: string;
+  width?: number;
+  height?: number;
+  cardId?: string;
+}
+
+// Flexoki's purple (pu / pu2 — the deep and bright steps of the hue) is the
+// house accent; frontmatter `accent:` overrides it per dossier.
+const { title, theme = 'light', accent = 'purple', width, height, cardId } = Astro.props;
+
+// 1rem = 16px at the 1600x1000 design size; scale by area for other formats
+const scale = width && height ? Math.sqrt((width * height) / (1600 * 1000)) : 1;
+const vars = [
+  `--accent: var(--${accent})`,
+  `--accent-fill: var(--${accent}-fill)`,
+  `--accent-2: var(--${accent}-2)`,
+  `--accent-on: var(--${accent === 'yellow' ? 'yellow-on' : 'on-fill'})`,
+  width && `--w: ${width}px`,
+  height && `--h: ${height}px`,
+  `--root-size: ${(16 * scale).toFixed(3)}px`,
+]
+  .filter(Boolean)
+  .join(';\n  ');
+---
+
+<!doctype html>
+<html lang="en" data-theme={theme}>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{title}</title>
+    <!--
+      Per-dossier variables as a real (if inline) stylesheet, not an inline
+      style attribute: an inline style="" attribute on <html> would outrank
+      a card's own theme.css below regardless of specificity, and a card
+      needs to actually be able to win.
+    -->
+    <style set:html={`:root {\n  ${vars};\n}`} />
+    <!-- ?theme=light|dark overrides the dossier's default before first paint -->
+    <script is:inline>
+      const t = new URLSearchParams(location.search).get('theme');
+      if (t === 'light' || t === 'dark') document.documentElement.dataset.theme = t;
+    </script>
+    <!--
+      Two optional, composable style layers, each 404-harmless if absent:
+      cards/_shared/theme.css restyles every card in this CARDS_DIR at once;
+      cards/<id>/theme.css restyles just this one, loaded after so it wins
+      on equal-specificity rules (see docs/build-a-card.md). A card is fully
+      self-contained without either — this is for repo-wide or per-card
+      branding on top of the default Flexoki purple.
+    -->
+    <link rel="stylesheet" href="/cards/_shared/theme.css" />
+    {cardId && <link rel="stylesheet" href={`/cards/${cardId}/theme.css`} />}
+  </head>
+  <body>
+    <slot />
+  </body>
+</html>

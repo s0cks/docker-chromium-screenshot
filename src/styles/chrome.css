@@ -1,0 +1,128 @@
+/* ---------- slide frame ---------- */
+
+.slide {
+  --pad-x: 3.125rem;
+  width: var(--w);
+  height: var(--h);
+  display: grid;
+  grid-template-rows: auto auto minmax(0, 1fr) auto;
+  background: var(--bg);
+  color: var(--ink);
+  overflow: hidden;
+  container: slide / size;
+}
+
+.masthead {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 2rem;
+  height: 5.1rem;
+  padding: 0 3.75rem;
+  background: var(--chrome);
+  color: var(--chrome-ink);
+  font: 600 1.75rem/1 var(--font-mono);
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+}
+.masthead .brand { display: flex; align-items: center; gap: 1.1rem; min-width: 0; }
+.masthead .logo {
+  width: 2.9rem;
+  height: 2.9rem;
+  border-radius: 50%;
+  object-fit: cover;
+  flex: none;
+}
+.masthead .series { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.masthead .pager { color: var(--accent-2); white-space: nowrap; }
+
+.kicker {
+  display: flex;
+  align-items: center;
+  height: 3.25rem;
+  padding: 0 3.75rem;
+  /* pu -> pu2: a two-tone sweep across the kicker rather than a flat fill */
+  background: linear-gradient(115deg, var(--accent-fill) 0%, var(--accent-fill) 55%, color-mix(in srgb, var(--accent-2) 70%, var(--accent-fill)) 100%);
+  color: var(--accent-on);
+  font: 600 1.35rem/1 var(--font-mono);
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  white-space: nowrap;
+  overflow: hidden;
+}
+.kicker span + span::before { content: '\00b7'; margin: 0 0.9em; }
+
+.colophon {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 2rem;
+  height: 3.25rem;
+  padding: 0 3.75rem;
+  background: var(--chrome);
+  color: var(--chrome-2);
+  font: 500 1.1rem/1 var(--font-mono);
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+.colophon .prov { letter-spacing: 0.08em; text-transform: none; font-size: 1rem; }
+.colophon .handle { text-transform: none; letter-spacing: 0.08em; }
+.colophon .handle b { color: var(--accent-2); font-weight: 500; }
+
+/* ---------- body ---------- */
+
+.body {
+  display: grid;
+  grid-template-columns: var(--lead, 38.75%) minmax(0, 1fr);
+  min-height: 0;
+}
+.body[data-layout='full'] { grid-template-columns: minmax(0, 1fr); }
+
+.col {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  min-height: 0;
+  overflow: hidden;
+  padding: 2.4rem var(--pad-x);
+}
+.col.lead { padding-right: 3.25rem; border-right: 1px solid var(--rule-strong); }
+.body[data-layout='full'] .col.lead { border-right: 0; }
+
+/* margin-block:auto centres short content and degrades to top-aligned
+   (rather than clipping the top) when content is too tall */
+.col-inner { margin-block: auto; display: flex; flex-direction: column; gap: 1.6rem; min-width: 0; }
+.body[data-valign='start'] .col-inner { margin-block: 0; }
+
+.title {
+  font: 700 4.4rem/1.02 var(--font-display);
+  letter-spacing: -0.015em;
+  color: var(--ink);
+  font-optical-sizing: auto;
+  text-wrap: balance;
+}
+
+.lead .prose { font-size: 1.42rem; line-height: 1.62; }
+
+/* The main column is a two-track grid; blocks span both unless w=half */
+.grid-2 {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  column-gap: 1.6rem;
+  row-gap: 1.6rem;
+  align-content: start;
+}
+.grid-2 > * { grid-column: span 2; min-width: 0; }
+.grid-2 > [data-w='half'] { grid-column: span 1; }
+.grid-2 > .prose:has(> h3:only-child) + * { margin-top: 0; }
+.grid-2 > .prose:has(> h3:first-child):not(:first-child) { margin-top: 0.6rem; }
+
+/* Portrait and square formats stack the two columns */
+@container slide (aspect-ratio < 1.1) {
+  .body { grid-template-columns: minmax(0, 1fr); grid-template-rows: auto minmax(0, 1fr); }
+  .col.lead { border-right: 0; border-bottom: 1px solid var(--rule-strong); padding-bottom: 1.8rem; }
+  .col { padding-block: 1.8rem; }
+  .title { font-size: 3.4rem; }
+  .lead .prose { font-size: 1.3rem; }
+}

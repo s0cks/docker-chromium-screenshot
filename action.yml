@@ -1,0 +1,58 @@
+name: Render cards
+description: Render Markdown/JSON/jsonnet cards into infographic PNGs (and PDFs) with Chromium in Docker.
+branding:
+  icon: image
+  color: purple
+
+inputs:
+  cards:
+    description: >
+      Directory containing one subdirectory per card, relative to the
+      workspace — each card.md or layout.json/yaml/jsonnet is self-contained
+      with its own logo, theme.css and meta alongside it. See
+      docs/build-a-card.md.
+    default: cards
+  out:
+    description: Output directory, relative to the workspace.
+    default: out
+  theme:
+    description: auto, light, dark or both.
+    default: auto
+  scale:
+    description: Device scale factor (2 gives 3200x2000 for a 1600x1000 card).
+    default: "2"
+  strict:
+    description: Fail on slide overflow or word-budget warnings.
+    default: "true"
+  pdf:
+    description: Also write one PDF per card and theme.
+    default: "false"
+  image:
+    description: Image to run.
+    default: ghcr.io/s0cks/docker-chromium-screenshot:latest
+
+runs:
+  using: composite
+  steps:
+    - shell: bash
+      env:
+        INPUT_CARDS: ${{ inputs.cards }}
+        INPUT_OUT: ${{ inputs.out }}
+        INPUT_THEME: ${{ inputs.theme }}
+        INPUT_SCALE: ${{ inputs.scale }}
+        INPUT_STRICT: ${{ inputs.strict }}
+        INPUT_PDF: ${{ inputs.pdf }}
+        INPUT_IMAGE: ${{ inputs.image }}
+        INPUT_GIT_COMMIT: ${{ github.sha }}
+      run: |
+        set -euo pipefail
+        mkdir -p "$GITHUB_WORKSPACE/$INPUT_OUT"
+        args=(--theme "$INPUT_THEME" --scale "$INPUT_SCALE")
+        [ "$INPUT_STRICT" = "true" ] && args+=(--strict)
+        [ "$INPUT_PDF" = "true" ] && args+=(--pdf)
+        docker run --rm \
+          -v "$GITHUB_WORKSPACE/$INPUT_CARDS:/app/cards:ro" \
+          -v "$GITHUB_WORKSPACE/$INPUT_OUT:/app/out" \
+          -e OUT_OWNER="$(id -u):$(id -g)" \
+          -e GIT_COMMIT="$INPUT_GIT_COMMIT" \
+          "$INPUT_IMAGE" "${args[@]}"

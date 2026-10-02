@@ -1,0 +1,18 @@
+# Local dev/CI convenience: `docker compose run render` builds the image (if
+# needed) and renders every card under ./cards, with host-owned output.
+# Point the volume at wherever your own cards/ directory lives.
+services:
+  render:
+    build:
+      context: .
+      args:
+        GIT_COMMIT: ${GIT_COMMIT:-local}
+        GIT_BRANCH: ${GIT_BRANCH:-local}
+        APP_VERSION: ${APP_VERSION:-dev}
+        BUILD_TIME: ${BUILD_TIME:-}
+    environment:
+      OUT_OWNER: "${OUT_OWNER:-}" # e.g. "$(id -u):$(id -g)" so ./out isn't root-owned
+    volumes:
+      - ./cards:/app/cards:ro
+      - ./out:/app/out
+    command: ["--theme", "both", "--pdf"]

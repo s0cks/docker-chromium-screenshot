@@ -1,0 +1,17 @@
+---
+import QRCode from 'qrcode';
+const { data } = Astro.props;
+// Always dark modules on a light ground, in both themes: some scanners
+// cannot read inverted codes. Colours are Flexoki black and paper.
+const svg = await QRCode.toString(data.link, {
+  type: 'svg',
+  errorCorrectionLevel: 'M',
+  margin: 2,
+  color: { dark: '#100f0f', light: '#fffcf0' },
+});
+const size = data.size ?? 6.5;
+---
+<div class="qr" style={`--qr:${size}rem`}>
+  <Fragment set:html={svg} />
+  {data.label && <span>{data.label}</span>}
+</div>

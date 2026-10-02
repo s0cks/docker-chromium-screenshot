@@ -1,0 +1,17 @@
+---
+import { mdi } from '../../lib/dossier.js';
+const { data } = Astro.props;
+// Accept a plain map, or { title, rows: { key: value } }
+const { title, rows } = data.rows ? data : { title: data.title, rows: Object.fromEntries(Object.entries(data).filter(([k]) => k !== 'title')) };
+---
+<div class="profile">
+  {title && <div class="profile-title">{title}</div>}
+  <dl>
+    {Object.entries(rows).map(([k, v]) => (
+      <>
+        <dt>{k}</dt>
+        <dd set:html={mdi(v)} />
+      </>
+    ))}
+  </dl>
+</div>

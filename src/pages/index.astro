@@ -1,0 +1,35 @@
+---
+import { loadDossiers, pad } from '../lib/dossier.js';
+const dossiers = loadDossiers();
+---
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>Dossiers</title>
+    <style>
+      body { font: 16px/1.5 ui-sans-serif, system-ui, sans-serif; max-width: 46rem; margin: 3rem auto; padding: 0 1rem; color: #100f0f; }
+      @media (prefers-color-scheme: dark) { body { background: #100f0f; color: #cecdc3; } a { color: #da702c; } }
+      h1 { font-size: 1.4rem; } h2 { font-size: 1.1rem; margin-top: 2rem; }
+      li { margin: 0.2rem 0; } small { color: #878580; }
+    </style>
+  </head>
+  <body>
+    <h1>Dossiers</h1>
+    {dossiers.map((d) => (
+      <section>
+        <h2>{d.meta.title} <small>{d.id} &middot; {d.size.width}x{d.size.height} &middot; {d.meta.theme}</small></h2>
+        <ol>
+          {d.slides.map((s) => (
+            <li>
+              <a href={`/${d.id}/${pad(s.index + 1)}/`}>{s.title ?? 'Untitled'}</a>
+              {' '}<a href={`/${d.id}/${pad(s.index + 1)}/?theme=${d.meta.theme === 'dark' ? 'light' : 'dark'}`}><small>{d.meta.theme === 'dark' ? 'light' : 'dark'}</small></a>
+              <small> &middot; {s.words} words</small>
+            </li>
+          ))}
+        </ol>
+        {d.warnings.map((w) => <p><small>warning: {w}</small></p>)}
+      </section>
+    ))}
+  </body>
+</html>

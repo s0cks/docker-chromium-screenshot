@@ -1,0 +1,5 @@
+---
+interface Props { parts: (string | undefined | null | false)[] }
+const parts = Astro.props.parts.filter(Boolean) as string[];
+---
+<div class="kicker">{parts.map((p) => <span>{p}</span>)}</div>

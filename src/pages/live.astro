@@ -1,0 +1,11 @@
+---
+import Base from '../layouts/Base.astro';
+// The live page has no build-time dossier: title/theme/size/cardId are
+// placeholders that src/client/live.js overwrites once it has fetched
+// /layout/{id} (cardId also gets its own <link> injected then, since it
+// isn't known until runtime). See docs/authoring.md#json-and-jsonnet-layouts.
+---
+<Base title="Dossier" theme="light" accent="purple" width={1600} height={1000}>
+  <div id="slide-root">Loading…</div>
+  <script src="../client/live.js"></script>
+</Base>

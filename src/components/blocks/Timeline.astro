@@ -1,0 +1,42 @@
+---
+import { mdi } from '../../lib/dossier.js';
+import { horizontalLayout } from '../../lib/timeline.js';
+
+const { data, attrs } = Astro.props;
+const events = Array.isArray(data) ? data : (data.events ?? data.items ?? []);
+const title = data.title;
+const orientation = attrs.orientation ?? data.orientation ?? 'vertical';
+const scale = attrs.scale ?? data.scale ?? 'even';
+const height = attrs.h ?? data.h ?? 17;
+
+const horizontal = orientation === 'horizontal' ? horizontalLayout(events, { scale }) : [];
+---
+{title && <div class="tl-title" style="margin-bottom:0.9rem">{title}</div>}
+{orientation === 'horizontal' ? (
+  <div class="tl-h" style={`--th:${height}rem`}>
+    <div class="axis"></div>
+    {horizontal.map((e) => (
+      <>
+        <i class="dot" data-tone={e.tone ?? 'accent'} style={`--p:${e.p}%`}></i>
+        <div class="ev" data-tone={e.tone ?? 'accent'} data-side={e.side} style={`--p:${e.p}%; --ew:${e.width}%`}>
+          <time>{e.date}</time>
+          <b set:html={mdi(e.title ?? '')} />
+          {e.text && <span set:html={mdi(e.text)} />}
+        </div>
+      </>
+    ))}
+  </div>
+) : (
+  <ol class="tl-v">
+    {events.map((e) => (
+      <li data-tone={e.tone ?? 'accent'}>
+        <time>{e.date}</time>
+        <span class="rail"></span>
+        <div class="e">
+          <b set:html={mdi(e.title ?? '')} />
+          {e.text && <span set:html={mdi(e.text)} />}
+        </div>
+      </li>
+    ))}
+  </ol>
+)}

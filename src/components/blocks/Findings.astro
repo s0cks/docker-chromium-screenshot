@@ -1,0 +1,14 @@
+---
+import { mdi } from '../../lib/dossier.js';
+const { data, attrs } = Astro.props;
+const items = Array.isArray(data) ? data : (data.items ?? []);
+const src = (s) => (Array.isArray(s) ? s.join(' \u00b7 ') : s);
+---
+<ul class="findings">
+  {items.map((f) => (
+    <li data-tone={f.tone ?? attrs.tone ?? 'accent'}>
+      {f.head && <strong set:html={mdi(f.head) + ' '} />}<span set:html={mdi(f.text ?? '')} />
+      {f.source && <div class="src">{src(f.source)}</div>}
+    </li>
+  ))}
+</ul>

@@ -1,0 +1,19 @@
+---
+import Callout from './blocks/Callout.astro';
+import Chart from './blocks/Chart.astro';
+import Findings from './blocks/Findings.astro';
+import Profile from './blocks/Profile.astro';
+import Qr from './blocks/Qr.astro';
+import Quote from './blocks/Quote.astro';
+import Sources from './blocks/Sources.astro';
+import Stats from './blocks/Stats.astro';
+import Threads from './blocks/Threads.astro';
+import Timeline from './blocks/Timeline.astro';
+
+/** fence name -> component. Add a block here and in BLOCKS (src/lib/dossier.js). */
+const registry = { callout: Callout, chart: Chart, findings: Findings, profile: Profile, qr: Qr, quote: Quote, sources: Sources, stats: Stats, threads: Threads, timeline: Timeline };
+
+const { node } = Astro.props;
+const Component = registry[node.name];
+---
+<Component {...node} />

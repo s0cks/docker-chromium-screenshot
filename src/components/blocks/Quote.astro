@@ -1,0 +1,9 @@
+---
+import { md } from '../../lib/dossier.js';
+const { md: body, attrs } = Astro.props;
+const cite = [attrs.by, attrs.source].filter(Boolean).join(' \u00b7 ');
+---
+<figure class="quote" data-tone={attrs.tone ?? 'accent'}>
+  <blockquote set:html={md(body)} />
+  {cite && <figcaption>{cite}</figcaption>}
+</figure>
