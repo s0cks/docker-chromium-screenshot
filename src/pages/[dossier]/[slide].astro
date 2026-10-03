@@ -13,6 +13,7 @@ export function getStaticPaths() {
 }
 
 const { dossier, slide } = Astro.props;
+const sizeProfile = dossier.meta.size || 'landscape';
 ---
 <Base
   title={`${dossier.meta.title} ${pad(slide.index + 1)}/${pad(dossier.slides.length)}`}
@@ -21,6 +22,7 @@ const { dossier, slide } = Astro.props;
   width={dossier.size.width}
   height={dossier.size.height}
   cardId={dossier.id}
+  size={sizeProfile}
 >
   <Slide dossier={dossier} slide={slide} />
 </Base>

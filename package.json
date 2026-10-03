@@ -14,7 +14,7 @@
     "test": "node --test test/*.test.js",
     "clean": "rm -rf dist out .astro",
     "samples": "SERVICE_BIN=service/bin/dossier-service node scripts/render.mjs --theme both --scale 1 --out docs/samples",
-    "build:service": "cd service && go build -o bin/dossier-service ./cmd/dossier-service"
+    "build:service": "cd service && go build -o bin/dossier-service ."
   },
   "keywords": [
     "docker",

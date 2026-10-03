@@ -3,12 +3,20 @@ import Block from './Block.astro';
 import Colophon from './chrome/Colophon.astro';
 import KickerBar from './chrome/KickerBar.astro';
 import Masthead from './chrome/Masthead.astro';
+import Watermark from '../assets/watermark.svg';
 
 const { dossier, slide } = Astro.props;
-const { meta, slides } = dossier;
+const { meta, slides, size } = dossier;
 const nodes = [...slide.lead, ...slide.main];
 const full = slide.layout === 'full';
 const nodeWidth = (n) => (n.kind === 'block' && n.attrs.w === 'half' ? 'half' : undefined);
+
+let sizeProfile = 'landscape';
+if (size.width === 1200 && size.height === 1200) {
+  sizeProfile = 'square';
+} else if (size.width === 1080 && size.height === 1920) {
+  sizeProfile = 'vertical';
+}
 
 const provenance = meta.provenance
   ? [meta.ref, (process.env.GITHUB_SHA ?? process.env.DOSSIER_COMMIT ?? 'local').slice(0, 7), new Date(Number(process.env.SOURCE_DATE_EPOCH ?? Date.now() / 1000) * 1000).toISOString().slice(0, 10)]
@@ -22,34 +30,68 @@ const lead = slide.config.lead ? `${slide.config.lead}%` : undefined;
   id="slide"
   data-dossier={dossier.id}
   data-slide={slide.index + 1}
+  data-size={sizeProfile}
 >
   <Masthead series={meta.series} logo={meta.logo} index={slide.index} total={slides.length} />
   <KickerBar parts={[meta.subject, meta.part, slide.kicker]} />
 
-  <div class="body" data-layout={slide.layout} data-valign={slide.config.valign ?? 'center'} style={lead ? `--lead:${lead}` : undefined}>
-    {full ? (
-      <div class="col" data-col="main">
-        <div class="col-inner grid-2">
-          {slide.title && <h2 class="title" style="grid-column: span 2">{slide.title}</h2>}
-          {nodes.map((n) => n.kind === 'md' ? <div class="prose" set:html={n.html} /> : <div data-w={nodeWidth(n)}><Block node={n} /></div>)}
-        </div>
-      </div>
-    ) : (
-      <>
-        <div class="col lead" data-col="lead">
-          <div class="col-inner">
-            {slide.title && <h2 class="title">{slide.title}</h2>}
-            {slide.lead.map((n) => n.kind === 'md' ? <div class="prose" set:html={n.html} /> : <Block node={n} />)}
-          </div>
-        </div>
-        <div class="col main" data-col="main">
+  <div class="body-canvas-wrapper relative w-full h-full">
+   <div class="dossier-watermark-anchor absolute z-0 pointer-events-none select-none opacity-[0.035] text-current">
+     <Watermark class="w-full h-full fill-current" />
+   </div>
+
+    <div class="body relative z-10 w-full h-full" data-layout={slide.layout} data-valign={slide.config.valign ?? 'center'} style={lead ? `--lead:${lead}` : undefined}>
+      {full ? (
+        <div class="col" data-col="main">
           <div class="col-inner grid-2">
-            {slide.main.map((n) => n.kind === 'md' ? <div class="prose" set:html={n.html} /> : <div data-w={nodeWidth(n)}><Block node={n} /></div>)}
+            {slide.title && <h2 class="title" style="grid-column: span 2">{slide.title}</h2>}
+            {nodes.map((n) => n.kind === 'md' ? <div class="prose" set:html={n.html} /> : <div data-w={nodeWidth(n)}><Block node={n} /></div>)}
           </div>
         </div>
-      </>
-    )}
+      ) : (
+        <>
+          <div class="col lead" data-col="lead">
+            <div class="col-inner">
+              {slide.title && <h2 class="title">{slide.title}</h2>}
+              {slide.lead.map((n) => n.kind === 'md' ? <div class="prose" set:html={n.html} /> : <Block node={n} />)}
+            </div>
+          </div>
+          <div class="col main" data-col="main">
+            <div class="col-inner grid-2">
+              {slide.main.map((n) => n.kind === 'md' ? <div class="prose" set:html={n.html} /> : <div data-w={nodeWidth(n)}><Block node={n} /></div>)}
+            </div>
+          </div>
+        </>
+      )}
+    </div>
   </div>
 
   <Colophon series={meta.series} handle={meta.handle} provenance={provenance} />
 </article>
+<style>
+  .body-canvas-wrapper {
+    position: relative;
+    overflow: hidden;
+  }
+
+  .dossier-watermark-anchor {
+    position: absolute;
+    bottom: 8px;
+    left: 8px;
+  }
+
+  article[data-size="landscape"] .dossier-watermark-anchor {
+    width: 120px;
+    height: 120px;
+  }
+
+  article[data-size="square"] .dossier-watermark-anchor {
+    width: 100px;
+    height: 100px;
+  }
+
+  article[data-size="vertical"] .dossier-watermark-anchor {
+    width: 90px;
+    height: 90px;
+  }
+</style>
