@@ -1,20 +1,31 @@
 ---
 import { mdi } from '../../lib/dossier.js';
+import Chip from './Chip.astro';
 const { data, attrs } = Astro.props;
 const items = Array.isArray(data) ? data : (data.items ?? []);
 const showLabels = attrs.labels ?? data.labels ?? false;
-// status -> tone. Unknown or missing status falls back to blue (neutral evidence).
-const STATUS = { open: 'accent', confirmed: 'green', alleged: 'yellow', disputed: 'red', closed: 'muted', watch: 'purple' };
+const STATUS = {
+  open: 'accent',
+  confirmed: 'green',
+  alleged: 'yellow',
+  disputed: 'red',
+  closed: 'muted',
+  watch: 'blue',
+};
 const src = (s) => (Array.isArray(s) ? s.join(' \u00b7 ') : s);
 ---
 <div class="threads">
   {items.map((t) => (
-    <div class="thread" data-tone={STATUS[t.status] ?? t.tone ?? 'blue'}>
+  <div class="thread"
+    data-tone={STATUS[t.status] ?? t.tone ?? 'blue'}>
       <div>
-        {showLabels && t.status && <span class="chip">{t.status}</span>}
+        {showLabels && t.status &&
+          <Chip tone={STATUS[t.status] ?? t.tone}
+                message={t.status} />}
         <span class="t" set:html={mdi(t.title ?? '')} />
         {t.text && <> <span set:html={mdi(t.text)} /></>}
       </div>
+
       {t.source && <div class="src">{src(t.source)}</div>}
     </div>
   ))}

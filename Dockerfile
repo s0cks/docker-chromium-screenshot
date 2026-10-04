@@ -32,15 +32,14 @@ ENV ASTRO_TELEMETRY_DISABLED=1 \
 
 WORKDIR /app
 
-COPY package.json package-lock.json ./
-RUN npm ci --no-audit --no-fund
+COPY package.json ./
+RUN npm i --no-audit --no-fund
 
 COPY --from=service /svc/dossier-service /app/service/dossier-service
 COPY astro.config.mjs ./
 COPY scripts ./scripts
 COPY src ./src
-COPY public ./public
 COPY cards ./cards
 
-ENTRYPOINT ["node", "scripts/render.mjs"]
+ENTRYPOINT ["node", "scripts/render.mjs" ]
 CMD []

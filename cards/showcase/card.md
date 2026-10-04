@@ -135,7 +135,7 @@ The network is not slow. Two terminals are.
 
 +++
 
-```chart w=full h=275
+```chart w=full h=half
 type: line
 title: On-time delivery, % of boxes
 x: [Apr, May, Jun, Jul, Aug, Sep]
@@ -155,7 +155,7 @@ annotations:
 source: Terminal KPIs · Peer benchmark, 9 carriers
 ```
 
-```chart w=half h=230
+```chart w=half h=half
 type: hbar
 title: Delay cost by terminal, €M
 items:
@@ -167,7 +167,7 @@ items:
 format: { prefix: '€', suffix: 'M', decimals: 1 }
 ```
 
-```chart w=half h=230
+```chart w=half h=half
 type: donut
 title: Delay cause, share of hours
 center: { value: 54%, label: Congestion }
@@ -183,13 +183,8 @@ format: { suffix: '%', compact: false }
 
 ## What we assess
 
-The evidence supports a narrow fix. Address the two terminals first, and treat the systems programme as the biggest governance question.
-
-```qr
-link: https://github.com/s0cks/docker-chromium-screenshot
-label: Source and build notes
-size: 6
-```
+The evidence supports a narrow fix.
+Address the two terminals first, and treat the systems programme as the biggest governance question.
 
 +++
 
@@ -213,11 +208,11 @@ size: 6
 
 ### Recommended actions
 
-| Action | Owner | By | Cost |
-| --- | --- | --- | ---: |
-| Add gate windows at Gdansk | Terminals | Oct | €0.8M |
-| Rebuild Rotterdam-North yard plan | Ops | Nov | €2.4M |
-| Independent audit of yard system | Board | Dec | €0.5M |
+| Action                            | Owner     | By  |  Cost |
+|-----------------------------------|:---------:|:---:|------:|
+| Add gate windows at Gdansk        | Terminals | Oct | €0.8M |
+| Rebuild Rotterdam-North yard plan | Ops       | Nov | €2.4M |
+| Independent audit of yard system  | Board     | Dec | €0.5M |
 
 ```sources
 - Board paper 14, 22 Aug 2026

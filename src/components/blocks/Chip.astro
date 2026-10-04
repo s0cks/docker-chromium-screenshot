@@ -1,0 +1,11 @@
+---
+interface Props {
+  tone: string;
+  message?: string;
+  rounded?: boolean;
+}
+const { tone, message, rounded = true } = Astro.props;
+---
+<span class="chip"
+      data-rounded={rounded || undefined}
+      data-tone={tone ?? 'accent'}>{message ?? tone}</span>

@@ -1,0 +1,3 @@
+@mixin toned-border($side) {
+  border-#{$side}: 0.35rem solid var(--t);
+}

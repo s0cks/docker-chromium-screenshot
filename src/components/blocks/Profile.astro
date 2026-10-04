@@ -1,10 +1,11 @@
 ---
 import { mdi } from '../../lib/dossier.js';
 const { data } = Astro.props;
-// Accept a plain map, or { title, rows: { key: value } }
+const align = data.align ?? 'left';
 const { title, rows } = data.rows ? data : { title: data.title, rows: Object.fromEntries(Object.entries(data).filter(([k]) => k !== 'title')) };
 ---
-<div class="profile">
+<div class="profile"
+     data-align={align} >
   {title && <div class="profile-title">{title}</div>}
   <dl>
     {Object.entries(rows).map(([k, v]) => (

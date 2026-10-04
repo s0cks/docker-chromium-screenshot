@@ -7,32 +7,37 @@ interface Props {
   provenance?: string,
   license?: string,
   link?: string,
+  commit?: string,
+  timestamp?: string,
 }
 
 const {
   provenance = '',
   license = '',
   link = '',
+  commit = '',
+  timestamp = '',
 } = Astro.props;
-
-const qrData = {
-  link: link,
-  size: 3,
-};
 ---
 <footer class="colophon">
   <div class="prov">
     {license &&
       <span class="license">{license}</span>}
+
+    {commit &&
+      <span class="commit">{commit}</span>}
+
+    {timestamp &&
+      <span class="timestamp">{timestamp}</span>}
   </div>
 
   <div class="vault">
-    <Shield />
-    <Heart />
-
     {link && 
       <div class="gateway-qr">
-        <Qr data={qrData} />
+        <Qr data={{
+              link: link,
+              size: 3,
+            }} />
       </div>}
   </div>
 </footer>

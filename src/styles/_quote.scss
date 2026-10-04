@@ -1,6 +1,14 @@
+@use 'mixins' as m;
+
 .quote {
+  width: 100%;
+  background-color: var(--panel);
+
   padding-left: 1.6rem;
-  border-left: 0.35rem solid var(--t);
+  padding-top: 0.5rem;
+  padding-bottom: 0.5rem;
+
+  @include m.toned-border('left');
 
   blockquote {
     font: italic 500 1.95rem/1.32 var(--font-display);

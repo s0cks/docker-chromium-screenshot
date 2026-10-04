@@ -234,39 +234,41 @@ try {
 
   if (opts.live && server.hasApi) {
     const { layouts } = await fetch(`${base}/layouts`).then((r) => r.json());
-    const ids = layouts.filter((id) => !only.length || only.includes(id));
-    for (const id of ids) {
-      const layout = await fetch(`${base}/layout/${id}`).then((r) => r.json());
-      if (!layout?.slides?.length) {
-        problem(`${id}: layout has no slides`);
-        continue;
-      }
-
-      const themeDefault = layout.meta?.theme === 'dark' ? 'dark' : 'light';
-      const themes = opts.theme === 'both' ? ['light', 'dark'] : [opts.theme === 'auto' ? themeDefault : opts.theme];
-      const [width, height] = sizeOf(layout.meta?.size);
-      console.log(`${id} (live): ${layout.slides.length} slides, ${width}x${height}, ${themes.join(' + ')}`);
-      fs.mkdirSync(path.join(out, id), { recursive: true });
-
-      for (const theme of themes) {
-        const context = await browser.newContext({ viewport: { width, height }, deviceScaleFactor: Number(opts.scale), colorScheme: theme, reducedMotion: 'reduce' });
-        for (let i = 0; i < layout.slides.length; i++) {
-          const file = path.join(out, id, `${pad(i + 1)}.${theme}.png`);
-          const url = `${base}/live/?dossier=${encodeURIComponent(id)}&slide=${i + 1}&theme=${theme}`;
-          const page = await context.newPage();
-          await page.goto(url, { waitUntil: 'networkidle' });
-          await page.waitForSelector('#slide[data-ready="true"]', { timeout: 10_000 }).catch(() => problem(`${id} #${i + 1}: client render did not signal ready`));
-          const overflow = await page.evaluate(() =>
-            [...document.querySelectorAll('[data-col]')].filter((el) => el.scrollHeight > el.clientHeight + 1).map((el) => `${el.dataset.col} column overflows by ${el.scrollHeight - el.clientHeight}px`),
-          );
-          overflow.forEach((o) => problem(`${id} #${i + 1} (${layout.slides[i].title}): ${o}`));
-          await page.locator('#slide').screenshot({ path: file, type: 'png', animations: 'disabled' });
-          await page.close();
-          report.files.push({ dossier: id, slide: i + 1, theme, title: layout.slides[i].title, file: path.relative(root, file), width: width * Number(opts.scale), height: height * Number(opts.scale), source: 'live' });
-          console.log(`  ${path.relative(root, file)}${overflow.length ? '  (overflow)' : ''}`);
+    if (layouts !== undefined && layouts !== null) {
+      const ids = layouts.filter((id) => !only.length || only.includes(id));
+      for (const id of ids) {
+        const layout = await fetch(`${base}/layout/${id}`).then((r) => r.json());
+        if (!layout?.slides?.length) {
+          problem(`${id}: layout has no slides`);
+          continue;
         }
 
-        await context.close();
+        const themeDefault = layout.meta?.theme === 'dark' ? 'dark' : 'light';
+        const themes = opts.theme === 'both' ? ['light', 'dark'] : [opts.theme === 'auto' ? themeDefault : opts.theme];
+        const [width, height] = sizeOf(layout.meta?.size);
+        console.log(`${id} (live): ${layout.slides.length} slides, ${width}x${height}, ${themes.join(' + ')}`);
+        fs.mkdirSync(path.join(out, id), { recursive: true });
+
+        for (const theme of themes) {
+          const context = await browser.newContext({ viewport: { width, height }, deviceScaleFactor: Number(opts.scale), colorScheme: theme, reducedMotion: 'reduce' });
+          for (let i = 0; i < layout.slides.length; i++) {
+            const file = path.join(out, id, `${pad(i + 1)}.${theme}.png`);
+            const url = `${base}/live/?dossier=${encodeURIComponent(id)}&slide=${i + 1}&theme=${theme}`;
+            const page = await context.newPage();
+            await page.goto(url, { waitUntil: 'networkidle' });
+            await page.waitForSelector('#slide[data-ready="true"]', { timeout: 10_000 }).catch(() => problem(`${id} #${i + 1}: client render did not signal ready`));
+            const overflow = await page.evaluate(() =>
+              [...document.querySelectorAll('[data-col]')].filter((el) => el.scrollHeight > el.clientHeight + 1).map((el) => `${el.dataset.col} column overflows by ${el.scrollHeight - el.clientHeight}px`),
+            );
+            overflow.forEach((o) => problem(`${id} #${i + 1} (${layout.slides[i].title}): ${o}`));
+            await page.locator('#slide').screenshot({ path: file, type: 'png', animations: 'disabled' });
+            await page.close();
+            report.files.push({ dossier: id, slide: i + 1, theme, title: layout.slides[i].title, file: path.relative(root, file), width: width * Number(opts.scale), height: height * Number(opts.scale), source: 'live' });
+            console.log(`  ${path.relative(root, file)}${overflow.length ? '  (overflow)' : ''}`);
+          }
+
+          await context.close();
+        }
       }
     }
   }

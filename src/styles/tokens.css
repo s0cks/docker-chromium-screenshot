@@ -18,6 +18,12 @@
  *   ink      neutral
  */
 
+/* @mixin toned($name, $default) { */
+/*   &[data-tone='#{$name}'] { */
+/*     --t: var(--tone-#{$name}, $default); */
+/*   } */
+/* } */
+
 :root {
   /* Flexoki base scale */
   --paper: #fffcf0;
@@ -46,9 +52,9 @@
   --magenta-600: #a02f6f; --magenta-400: #ce5d97;
 
   /* Typography */
-  --font-display: 'Newsreader', 'Iowan Old Style', Georgia, serif;
-  --font-sans: 'IBM Plex Sans', 'Helvetica Neue', Arial, sans-serif;
-  --font-mono: 'IBM Plex Mono', ui-monospace, 'SF Mono', Menlo, monospace;
+  --font-display: 'Inter', 'Iowan Old Style', Georgia, serif;
+  --font-sans: 'Alegreya Sans', 'Helvetica Neue', Arial, sans-serif;
+  --font-mono: 'Monaspace Argon', ui-monospace, 'SF Mono', Menlo, monospace;
 
   /* Solid-fill text; yellow is too light for paper-coloured text */
   --on-fill: var(--paper);
@@ -139,11 +145,6 @@
   --magenta-fill: var(--magenta-600);
 }
 
-/*
- * Tones. Set data-tone on any element; children read --t (text/line),
- * --t-fill (solid background), --t-on (text on that background) and
- * --t-tint (soft background).
- */
 [data-tone] {
   --t: var(--ink);
   --t-fill: var(--ink-fill);

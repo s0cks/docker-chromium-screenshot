@@ -1,20 +1,18 @@
-.threads { display: grid; gap: 0.7rem; }
-.thread {
-  padding: 0.6rem 0 0.6rem 1.3rem;
-  border-left: 0.3rem solid var(--t);
-  font-size: 1.15rem;
-  line-height: 1.5;
-  color: var(--ink-2);
-}
-.thread .t { font-weight: 700; font-size: 1.2rem; color: var(--ink); }
-.chip {
-  display: inline-block;
-  margin-right: 0.65rem;
-  padding: 0.12rem 0.5rem;
-  border: 1px solid var(--t);
-  color: var(--t);
-  font: 600 0.78rem/1.3 var(--font-mono);
-  letter-spacing: 0.14em;
-  text-transform: uppercase;
-  vertical-align: 0.12em;
+.threads {
+  display: grid;
+  gap: 0.7rem;
+
+  .thread {
+    padding: 0.6rem 0 0.6rem 1.3rem;
+    border-left: 0.3rem solid var(--t);
+    font-size: 1.15rem;
+    line-height: 1.5;
+    color: var(--ink-2);
+
+    .t {
+      font-weight: 700;
+      font-size: 1.2rem;
+      color: var(--ink);
+    }
+  }
 }

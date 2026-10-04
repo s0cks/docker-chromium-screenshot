@@ -93,7 +93,7 @@ func LoadExtra(dir string, eval func(path string) (string, error)) (map[string]a
 		{"meta.json", decodeJSON},
 		{"meta.yaml", decodeYAML},
 		{"meta.yml", decodeYAML},
-		{"meta.jsonnet", nil}, // handled below via eval
+		{"meta.jsonnet", nil},
 	}
 
 	for _, c := range candidates {

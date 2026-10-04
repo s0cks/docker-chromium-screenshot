@@ -1,8 +1,0 @@
-/* Per-card override: this card alone renders in Flexoki blue instead of the
-   house purple, without touching any other card. Drop a theme.css next to
-   any card.md/layout.* to do the same — see docs/build-a-card.md. */
-:root {
-  --accent: var(--blue);
-  --accent-fill: var(--blue-fill);
-  --accent-2: var(--blue-2);
-}

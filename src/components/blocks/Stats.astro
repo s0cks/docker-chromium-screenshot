@@ -9,7 +9,9 @@ const arrow = (d) => (String(d).trim().startsWith('-') || String(d).trim().start
   {items.map((s) => {
     const filled = s.tone && s.tone !== 'outline';
     return (
-      <div class="stat" data-tone={filled ? s.tone : 'ink'} data-filled={filled ? '' : undefined}>
+    <div class="stat"
+      data-tone={filled ? s.tone : 'ink'}
+      data-filled={filled ? '' : undefined}>
         <div class="v">{s.value}</div>
         {s.label && <div class="l" set:html={mdi(s.label)} />}
         {s.note && <div class="n" set:html={mdi(s.note)} />}
