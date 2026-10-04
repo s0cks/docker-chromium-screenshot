@@ -1,13 +1,38 @@
 ---
-interface Props { series: string; handle?: string; provenance?: string }
-const { series, handle = '', provenance = '' } = Astro.props;
-// Trailing digits of a handle pick up the accent colour: u/Some_Name_2184
-const m = handle.match(/^(.*?)(\d+)$/);
+import Qr from '../blocks/Qr.astro';
+import Heart from '../blocks/Heart.astro';
+import Shield from '../blocks/Shield.astro';
+
+interface Props {
+  provenance?: string,
+  license?: string,
+  link?: string,
+}
+
+const {
+  provenance = '',
+  license = '',
+  link = '',
+} = Astro.props;
+
+const qrData = {
+  link: link,
+  size: 3,
+};
 ---
 <footer class="colophon">
-  <span>{series}</span>
-  {provenance && <span class="prov">{provenance}</span>}
-  {handle && (
-    <span class="handle">{m ? <>{m[1]}<b>{m[2]}</b></> : handle}</span>
-  )}
+  <div class="prov">
+    {license &&
+      <span class="license">{license}</span>}
+  </div>
+
+  <div class="vault">
+    <Shield />
+    <Heart />
+
+    {link && 
+      <div class="gateway-qr">
+        <Qr data={qrData} />
+      </div>}
+  </div>
 </footer>

@@ -1,7 +1,6 @@
 ---
 import Block from './Block.astro';
 import Colophon from './chrome/Colophon.astro';
-import KickerBar from './chrome/KickerBar.astro';
 import Masthead from './chrome/Masthead.astro';
 import Watermark from '../assets/watermark.svg';
 
@@ -32,8 +31,11 @@ const lead = slide.config.lead ? `${slide.config.lead}%` : undefined;
   data-slide={slide.index + 1}
   data-size={sizeProfile}
 >
-  <Masthead series={meta.series} logo={meta.logo} index={slide.index} total={slides.length} />
-  <KickerBar parts={[meta.subject, meta.part, slide.kicker]} />
+<Masthead series={meta.series}
+          author={meta.author}
+          logo={meta.logo}
+          index={slide.index}
+          total={slides.length} />
 
   <div class="body-canvas-wrapper relative w-full h-full">
    <div class="dossier-watermark-anchor absolute z-0 pointer-events-none select-none opacity-[0.035] text-current">
@@ -66,7 +68,9 @@ const lead = slide.config.lead ? `${slide.config.lead}%` : undefined;
     </div>
   </div>
 
-  <Colophon series={meta.series} handle={meta.handle} provenance={provenance} />
+  <Colophon license={meta.license}
+            provenance={provenance}
+            link={meta.link} />
 </article>
 <style>
   .body-canvas-wrapper {

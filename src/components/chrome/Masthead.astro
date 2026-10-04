@@ -1,8 +1,8 @@
 ---
+import Author from './Author.astro';
 import { pad } from '../../lib/dossier.js';
 interface Props { series: string; logo?: string | null; index: number; total: number }
-const { series, logo, index, total } = Astro.props;
-// logos are served from /cards/<id>/... (or an explicit absolute/https URL); make the path absolute so it works from any route
+const { series, logo, index, total, author = '', } = Astro.props;
 const logoSrc = logo && !/^(\/|https?:|data:)/.test(logo) ? `/${logo}` : logo;
 ---
 <header class="masthead">
@@ -10,5 +10,11 @@ const logoSrc = logo && !/^(\/|https?:|data:)/.test(logo) ? `/${logo}` : logo;
     {logoSrc && <img class="logo" src={logoSrc} alt="" />}
     <span class="series">{series}</span>
   </div>
-  <span class="pager">{pad(index + 1)} / {pad(total)}</span>
+
+  <div class="info">
+    {author && (
+      <Author author={author} />
+    )}
+    <span class="pager">{pad(index + 1)}/{pad(total)}</span>
+  </div>
 </header>

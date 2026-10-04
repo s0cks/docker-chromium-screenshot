@@ -9,7 +9,7 @@ local d = import 'dossier.libsonnet';
     series: 'Ops Review',
     subject: 'Halden Freight',
     part: 'Q3 2026, jsonnet edition',
-    handle: '@dossier_demo_2026',
+    author: '@dossier_demo_2026',
     theme: 'dark',
     accent: 'purple',
     size: 'landscape',

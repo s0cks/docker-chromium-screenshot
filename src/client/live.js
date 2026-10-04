@@ -71,17 +71,17 @@ function buildKicker(parts) {
   return bar;
 }
 
-function buildColophon({ series, handle, provenanceText }) {
+function buildColophon({ series, author, provenanceText }) {
   const footer = el('footer', { class: 'colophon' });
   footer.append(el('span', { text: series }));
   if (provenanceText) footer.append(el('span', { class: 'prov', text: provenanceText }));
-  if (handle) {
-    const m = handle.match(/^(.*?)(\d+)$/);
-    const span = el('span', { class: 'handle' });
+  if (author) {
+    const m = author.match(/^(.*?)(\d+)$/);
+    const span = el('span', { class: 'author' });
     if (m) {
       span.append(document.createTextNode(m[1]));
       span.append(el('b', { text: m[2] }));
-    } else span.textContent = handle;
+    } else span.textContent = author;
     footer.append(span);
   }
   return footer;

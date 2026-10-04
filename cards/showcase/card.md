@@ -1,17 +1,20 @@
 ---
-series: Sample Dossier
+series: Shadow Sovereignty
+author: "@s0cks"
+license: MIT
+link: https://google.com
+
 subject: Halden Freight
 part: Q3 2026 review
-handle: "@dossier_demo_2026"
-ref: DOS-2026-014
+ref: DOS-2026-013
+
 provenance: true
 theme: dark
 size: 1600x1000
 snippets:
   invented: |
     ```callout tone=plain
-    Invented data. Every name, figure and date in this sample is made up to show the components.
-    ```
+    Invented data. Every name, figure and date in this sample is made up to show the components.```
 ---
 
 ## Halden at a glance

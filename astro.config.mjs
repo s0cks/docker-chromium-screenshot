@@ -9,10 +9,12 @@ const cardsDir = path.resolve(process.env.CARDS_DIR ?? 'cards');
 const reloadOnCardChange = {
   name: 'card-reload',
   configureServer(server) {
-    server.watcher.add(cardsDir);
+    server.watcher.add(`${cardsDir}/**/*`);
     const reload = (file) => {
-      if (file.startsWith(cardsDir)) server.ws.send({ type: 'full-reload' });
+      if (file.startsWith(cardsDir))
+        server.ws.send({ type: 'full-reload' });
     };
+
     server.watcher.on('change', reload);
     server.watcher.on('add', reload);
   },

@@ -1,0 +1,6 @@
+---
+interface Props { author?: string; }
+const { author = '' } = Astro.props;
+const m = author.match(/^(.*?)(\d+)$/);
+---
+<span class="author">{m ? <>{m[1]}<b>{m[2]}</b></> : author}</span>
