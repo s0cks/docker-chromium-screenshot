@@ -1,0 +1,91 @@
+.tl-title, .chart-title, .profile-title {
+  font: 700 1.3rem/1.3 var(--font-sans);
+  color: var(--ink);
+}
+
+.tl-v { list-style: none; padding: 0; display: grid; }
+.tl-v li {
+  display: grid;
+  grid-template-columns: 6.6rem 1.4rem minmax(0, 1fr);
+  column-gap: 0.9rem;
+  padding-bottom: 1.05rem;
+}
+.tl-v li:last-child { padding-bottom: 0; }
+.tl-v time {
+  padding-top: 0.12rem;
+  text-align: right;
+  font: 600 1rem/1.4 var(--font-mono);
+  color: var(--ink-2);
+}
+.tl-v .rail { position: relative; }
+.tl-v .rail::before {
+  content: '';
+  position: absolute;
+  left: 50%;
+  top: 0.42rem;
+  width: 0.9rem;
+  height: 0.9rem;
+  border-radius: 50%;
+  background: var(--t);
+  transform: translateX(-50%);
+  box-shadow: 0 0 0 0.25rem var(--bg);
+  z-index: 1;
+}
+.tl-v li:not(:last-child) .rail::after {
+  content: '';
+  position: absolute;
+  left: 50%;
+  top: 0.9rem;
+  bottom: -1.3rem;
+  width: 2px;
+  background: var(--rule-strong);
+  transform: translateX(-50%);
+}
+.tl-v .e { font-size: 1.1rem; line-height: 1.45; color: var(--ink-2); }
+.tl-v .e b { display: block; font-size: 1.17rem; color: var(--ink); }
+
+.tl-h { position: relative; height: var(--th, 17rem); margin-inline: 1rem; }
+.tl-h .axis {
+  position: absolute;
+  inset-inline: -1rem;
+  top: 50%;
+  height: 3px;
+  margin-top: -1.5px;
+  background: var(--rule-strong);
+}
+.tl-h .dot {
+  position: absolute;
+  left: var(--p);
+  top: 50%;
+  width: 1.05rem;
+  height: 1.05rem;
+  margin: -0.525rem 0 0 -0.525rem;
+  border-radius: 50%;
+  background: var(--t);
+  box-shadow: 0 0 0 0.3rem var(--bg);
+}
+.tl-h .ev {
+  position: absolute;
+  left: var(--p);
+  width: var(--ew);
+  transform: translateX(-50%);
+  text-align: center;
+  font-size: 1.02rem;
+  line-height: 1.4;
+  color: var(--ink-2);
+}
+.tl-h .ev[data-side='up'] { bottom: calc(50% + 1.5rem); }
+.tl-h .ev[data-side='down'] { top: calc(50% + 1.5rem); }
+.tl-h .ev::after {
+  content: '';
+  position: absolute;
+  left: 50%;
+  width: 2px;
+  height: 1.5rem;
+  margin-left: -1px;
+  background: var(--t);
+}
+.tl-h .ev[data-side='up']::after { bottom: -1.5rem; }
+.tl-h .ev[data-side='down']::after { top: -1.5rem; }
+.tl-h time { display: block; font: 600 0.95rem/1.3 var(--font-mono); color: var(--t); margin-bottom: 0.2rem; }
+.tl-h .ev b { display: block; font-size: 1.1rem; line-height: 1.3; color: var(--ink); }

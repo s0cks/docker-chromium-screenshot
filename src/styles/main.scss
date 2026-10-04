@@ -1,0 +1,33 @@
+@forward 'prose';
+@forward 'callout';
+@forward 'charts';
+@forward 'findings';
+@forward 'profile';
+@forward 'prose';
+@forward 'qr';
+@forward 'quote';
+@forward 'sources';
+@forward 'stats';
+@forward 'threads';
+@forward 'timeline';
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  margin: 0;
+}
+
+html {
+  background: var(--bg);
+  color: var(--ink);
+  font-family: var(--font-sans);
+  font-size: var(--root-size, 16px);
+  font-kerning: normal;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+a { color: inherit; }
+strong { font-weight: 700; }
+em { font-style: italic; }

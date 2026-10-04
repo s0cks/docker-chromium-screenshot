@@ -1,0 +1,3 @@
+.qr { display: flex; align-items: center; gap: 1.2rem; color: var(--ink); }
+.qr svg { width: var(--qr, 6.5rem); height: var(--qr, 6.5rem); flex: none; }
+.qr span { font: 500 0.95rem/1.4 var(--font-mono); letter-spacing: 0.08em; text-transform: uppercase; color: var(--ink-2); }

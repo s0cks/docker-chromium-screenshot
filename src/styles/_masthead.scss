@@ -1,0 +1,82 @@
+.masthead {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  gap: 1.5rem;
+
+  height: 5rem;
+  padding: 0 3.5rem;
+
+  background: var(--chrome);
+  color: var(--chrome-ink);
+
+  font-family: var(--font-mono), monospace;
+  font-size: 1.5rem;
+  font-weight: 600;
+  line-height: 1;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+
+  min-width: 0;
+  overflow: hidden;
+
+  .brand {
+    display: flex;
+    align-items: center;
+    gap: 1.25rem;
+    min-width: 0;
+    flex: 1;
+  }
+
+  .logo {
+    width: 2.75rem;
+    height: 2.75rem;
+    border-radius: 50%;
+    object-fit: cover;
+    flex: none;
+    transform: translateZ(0);
+    image-rendering: -webkit-optimize-contrast;
+    image-rendering: crisp-edges;
+  }
+
+  .series {
+    font-weight: 700;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 85%;
+  }
+
+  .pager {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--accent-2);
+    color: var(--chrome);
+    font-weight: 700;
+    letter-spacing: 0.05em;
+    padding: 0.35rem 0.75rem;
+    white-space: nowrap;
+  }
+
+  .info {
+    display: flex;
+    align-items: center;
+
+    gap: 2rem;
+    flex-shrink: 0;
+  }
+
+  .author {
+    text-transform: none;
+    letter-spacing: 0.05em;
+    font-weight: 400;
+    color: opacity-filter(var(--chrome-ink), 0.7);
+
+    b {
+      color: var(--accent-2);
+      font-weight: 600;
+    }
+  }
+}

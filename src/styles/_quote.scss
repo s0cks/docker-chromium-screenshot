@@ -1,0 +1,21 @@
+.quote {
+  padding-left: 1.6rem;
+  border-left: 0.35rem solid var(--t);
+
+  blockquote {
+    font: italic 500 1.95rem/1.32 var(--font-display);
+    color: var(--ink);
+    text-wrap: pretty;
+  }
+
+  blockquote p + p {
+    margin-top: 0.5em;
+  }
+
+  figcaption {
+    margin-top: 0.8rem;
+    font: 500 0.95rem/1.4 var(--font-mono);
+    color: var(--ink-2);
+  }
+}
+

@@ -1,26 +1,3 @@
-*,
-*::before,
-*::after {
-  box-sizing: border-box;
-  margin: 0;
-}
-
-html {
-  background: var(--bg);
-  color: var(--ink);
-  font-family: var(--font-sans);
-  font-size: var(--root-size, 16px);
-  font-kerning: normal;
-  -webkit-font-smoothing: antialiased;
-  text-rendering: optimizeLegibility;
-}
-
-a { color: inherit; }
-strong { font-weight: 700; }
-em { font-style: italic; }
-
-/* ---------- prose (rendered Markdown) ---------- */
-
 .prose { font-size: 1.2rem; line-height: 1.6; color: var(--ink-2); }
 .prose > * + * { margin-top: 0.85em; }
 .prose strong { color: var(--ink); }
@@ -50,7 +27,6 @@ em { font-style: italic; }
   color: var(--ink);
 }
 
-/* Section heading: an h3 in the main column */
 .prose h3 {
   font: 700 1.05rem/1.2 var(--font-mono);
   letter-spacing: 0.2em;
@@ -71,7 +47,6 @@ em { font-style: italic; }
   color: var(--ink-2);
 }
 
-/* Dense tables */
 .prose table {
   width: 100%;
   border-collapse: collapse;

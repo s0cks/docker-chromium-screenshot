@@ -1,4 +1,5 @@
-/* ---------- slide frame ---------- */
+@forward 'masthead';
+@forward 'colophon';
 
 .slide {
   --pad-x: 3.125rem;
@@ -12,66 +13,7 @@
   container: slide / size;
 }
 
-.masthead {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 2rem;
-  height: 5.1rem;
-  padding: 0 3.75rem;
-  background: var(--chrome);
-  color: var(--chrome-ink);
-  font: 600 1.75rem/1 var(--font-mono);
-  letter-spacing: 0.2em;
-  text-transform: uppercase;
-}
-.masthead .brand { display: flex; align-items: center; gap: 1.1rem; min-width: 0; }
-.masthead .logo {
-  width: 2.9rem;
-  height: 2.9rem;
-  border-radius: 50%;
-  object-fit: cover;
-  flex: none;
-}
-.masthead .series { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-.masthead .pager { color: var(--accent-2); white-space: nowrap; }
-
-.kicker {
-  display: flex;
-  align-items: center;
-  height: 3.25rem;
-  padding: 0 3.75rem;
-  /* pu -> pu2: a two-tone sweep across the kicker rather than a flat fill */
-  background: linear-gradient(115deg, var(--accent-fill) 0%, var(--accent-fill) 55%, color-mix(in srgb, var(--accent-2) 70%, var(--accent-fill)) 100%);
-  color: var(--accent-on);
-  font: 600 1.35rem/1 var(--font-mono);
-  letter-spacing: 0.18em;
-  text-transform: uppercase;
-  white-space: nowrap;
-  overflow: hidden;
-}
-.kicker span + span::before { content: '\00b7'; margin: 0 0.9em; }
-
-.colophon {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 2rem;
-  height: 3.25rem;
-  padding: 0 3.75rem;
-  background: var(--chrome);
-  color: var(--chrome-2);
-  font: 500 1.1rem/1 var(--font-mono);
-  letter-spacing: 0.14em;
-  text-transform: uppercase;
-  white-space: nowrap;
-}
-.colophon .prov { letter-spacing: 0.08em; text-transform: none; font-size: 1rem; }
-.colophon .handle { text-transform: none; letter-spacing: 0.08em; }
-.colophon .handle b { color: var(--accent-2); font-weight: 500; }
-
 /* ---------- body ---------- */
-
 .body {
   display: grid;
   grid-template-columns: var(--lead, 38.75%) minmax(0, 1fr);

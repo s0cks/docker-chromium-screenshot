@@ -1,0 +1,35 @@
+.chart { display: grid; gap: 0.7rem; }
+.chart .legend { display: flex; flex-wrap: wrap; gap: 0.4rem 1.3rem; font: 500 0.95rem/1.2 var(--font-mono); color: var(--ink-2); }
+.chart .legend i { display: inline-block; width: 0.8rem; height: 0.8rem; margin-right: 0.45rem; background: var(--c); vertical-align: -0.05rem; }
+.chart svg { display: block; width: 100%; height: auto; overflow: visible; }
+.chart .grid-line { stroke: var(--rule-strong); stroke-width: 1; }
+.chart .base-line { stroke: var(--ink); stroke-width: 1.5; }
+.chart .ax { font: 500 12px var(--font-mono); fill: var(--ink-2); }
+.chart .val { font: 600 12.5px var(--font-mono); fill: var(--ink); }
+.chart .ann-line { stroke: var(--accent); stroke-width: 1.5; stroke-dasharray: 4 4; }
+.chart .ann { font: 600 11.5px var(--font-mono); fill: var(--accent); }
+.chart .bg-dot { stroke: var(--bg); stroke-width: 2.5; }
+.chart .donut-c { font: 700 32px var(--font-display); fill: var(--ink); }
+.chart .donut-l { font: 500 11px var(--font-mono); fill: var(--ink-2); letter-spacing: 0.1em; }
+.chart-note { font: 400 0.92rem/1.4 var(--font-mono); color: var(--accent); }
+
+.hbars { display: grid; gap: 0.6rem; }
+.hbar {
+  display: grid;
+  grid-template-columns: var(--kw, 30%) minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 0.9rem;
+  font-size: 1.08rem;
+  line-height: 1.25;
+}
+.hbar .k { color: var(--ink); font-weight: 500; }
+.hbar .track { height: 1.15rem; background: var(--panel); }
+.hbar .fill { height: 100%; width: var(--pct); background: var(--t); }
+.hbar .num { min-width: 4.6rem; text-align: right; font: 600 1rem var(--font-mono); color: var(--ink); font-variant-numeric: tabular-nums; }
+
+.donut { display: grid; grid-template-columns: 13.5rem minmax(0, 1fr); align-items: center; gap: 1.6rem; }
+.donut ul { list-style: none; padding: 0; display: grid; gap: 0.55rem; font-size: 1.08rem; }
+.donut li { display: grid; grid-template-columns: 0.85rem minmax(0, 1fr) auto; gap: 0.7rem; align-items: center; }
+.donut[data-size='sm'] { grid-template-columns: 9.5rem minmax(0, 1fr); gap: 1.2rem; }
+.donut li i { width: 0.85rem; height: 0.85rem; background: var(--c); }
+.donut li .pct { font: 600 0.98rem var(--font-mono); font-variant-numeric: tabular-nums; text-align: right; }

@@ -1,0 +1,8 @@
+.profile { margin-top: -0.2rem; }
+.profile-title { padding: 0.7rem 0 0.2rem; }
+.profile dl { display: grid; grid-template-columns: minmax(7rem, 32%) minmax(0, 1fr); }
+.profile dt,
+.profile dd { padding: 0.62rem 0; border-bottom: 1px solid var(--rule-strong); font-size: 1.08rem; line-height: 1.4; }
+.profile dt { font: 600 0.86rem/1.6 var(--font-mono); letter-spacing: 0.12em; text-transform: uppercase; color: var(--ink-2); padding-right: 1rem; }
+.profile dd { color: var(--ink); }
+.profile dd p { display: inline; }

@@ -1,0 +1,53 @@
+.colophon {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  align-items: center;
+  gap: 2rem;
+
+  background: var(--chrome);
+  color: var(--chrome-2);
+
+  font-family: var(--font-mono), monospace;
+  font-weight: 500;
+  font-size: 1.1rem;
+  line-height: 1;
+
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  white-space: nowrap;
+
+  overflow: hidden;
+
+  .vault {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    flex-shrink: 0;
+
+    transform: translateZ(0);
+
+    img, svg, .qr-wrapper {
+      display: block;
+      flex-shrink: 0;
+      object-fit: contain;
+
+      image-rendering: -webkit-optimize-contrast;
+      image-rendering: crisp-edges;
+      image-rendering: pixelated;
+    }
+
+    .pixel-shield,
+    .pixel-heart {
+      width: 2rem;
+      height: 2rem;
+    }
+
+    .gateway-qr {
+      width: 2.5rem;
+      height: 2.5rem;
+      background: white;
+      padding: 0.15rem;
+      border: 1px solid opacity-filter(var(--chrome-2), 0.15);
+    }
+  }
+}

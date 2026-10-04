@@ -1,0 +1,4 @@
+.sources { border-top: 1px solid var(--rule-strong); padding-top: 0.7rem; }
+.sources h6 { font: 600 0.82rem/1.2 var(--font-mono); letter-spacing: 0.16em; text-transform: uppercase; color: var(--ink-2); margin-bottom: 0.5rem; }
+.sources ol { padding-left: 1.6rem; display: grid; gap: 0.25rem; font: 400 0.92rem/1.4 var(--font-mono); color: var(--ink-2); }
+.sources ol li::marker { color: var(--accent); font-weight: 600; }

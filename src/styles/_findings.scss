@@ -1,0 +1,18 @@
+.findings { list-style: none; padding: 0; display: grid; gap: 1.1rem; }
+.findings li { position: relative; padding-left: 1.5rem; font-size: 1.2rem; line-height: 1.55; color: var(--ink); }
+.findings li::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 0.62em;
+  width: 0.5rem;
+  height: 0.5rem;
+  border-radius: 50%;
+  background: var(--t);
+}
+.findings li strong { color: var(--ink); }
+.src {
+  margin-top: 0.3rem;
+  font: 400 0.95rem/1.5 var(--font-mono);
+  color: var(--accent);
+}
