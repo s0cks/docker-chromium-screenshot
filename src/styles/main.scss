@@ -1,3 +1,4 @@
+@forward 'tokens';
 @forward 'prose';
 @forward 'callout';
 @forward 'charts';
@@ -23,7 +24,13 @@ html {
   background: var(--bg);
   color: var(--ink);
   font-family: var(--font-sans);
-  font-size: var(--root-size, 16px);
+  // Fluid root size: no fixed card dimensions anywhere, no JS-computed
+  // scale — this reads whatever viewport it's actually given (Playwright's
+  // --viewport-width/--viewport-height, or a real device for /live/) and
+  // sizes type off it directly. vmin picks the more constrained axis, which
+  // is what you want whether the card is wide-short (og) or narrow-tall
+  // (story). @container breakpoints in chrome.scss handle layout reflow.
+  font-size: clamp(11px, 1.62vmin, 34px);
   font-kerning: normal;
   -webkit-font-smoothing: antialiased;
   text-rendering: optimizeLegibility;
@@ -31,8 +38,8 @@ html {
 
 html,
 body {
-  width: 100%;
-  height: 100%;
+  width: 100dvw;
+  height: 100dvh;
 }
 
 a { color: inherit; }

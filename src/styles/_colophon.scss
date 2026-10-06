@@ -9,8 +9,8 @@
   padding-top: 1rem;
   padding-bottom: 1rem;
 
-  background: var(--chrome);
   color: var(--chrome-2);
+  background: var(--chrome);
 
   font-family: var(--font-mono), monospace;
   font-weight: 500;
@@ -24,7 +24,7 @@
   overflow: hidden;
 
   .prov {
-    *:nth-child(n+2)::before {
+    *:nth-child(n + 2)::before {
       content: "|";
       margin: 0 0.5em;
       color: var(--ink-3);
@@ -34,12 +34,14 @@
   .vault {
     display: flex;
     align-items: center;
-    gap: 1rem;
+    gap: 0.5rem;
     flex-shrink: 0;
 
     transform: translateZ(0);
 
-    img, svg, .qr-wrapper {
+    img,
+    svg,
+    .qr-wrapper {
       display: block;
       flex-shrink: 0;
       object-fit: contain;
@@ -51,15 +53,14 @@
 
     .pixel-shield,
     .pixel-heart {
-      width: 2rem;
-      height: 2rem;
+      min-width: 32px;
+      min-height: 32px;
     }
 
     .gateway-qr {
-      width: 2.5rem;
-      height: 2.5rem;
-      background: white;
-      padding: 0.15rem;
+      min-width: 32px;
+      min-height: 32px;
+
       border: 1px solid opacity-filter(var(--chrome-2), 0.15);
     }
   }

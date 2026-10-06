@@ -1,6 +1,5 @@
 ---
 import '../styles/main.scss';
-import '../styles/tokens.css';
 import '../styles/chrome.scss';
 
 interface Props {
@@ -14,21 +13,18 @@ interface Props {
 
 // Flexoki's purple (pu / pu2 — the deep and bright steps of the hue) is the
 // house accent; frontmatter `accent:` overrides it per dossier.
-const { title, theme = 'light', accent = 'purple', width, height, cardId } = Astro.props;
+const { title, theme = 'light', accent = 'purple', cardId } = Astro.props;
 
-// 1rem = 16px at the 1600x1000 design size; scale by area for other formats
-const scale = width && height ? Math.sqrt((width * height) / (1600 * 1000)) : 1;
+// No baked pixel size: the card fills whatever viewport it's given
+// (Playwright's --viewport-width/--viewport-height, or a real browser for
+// /live/) and type scales fluidly via vmin in main.scss, so the same markup
+// works at any aspect ratio or scale.
 const vars = [
   `--accent: var(--${accent})`,
   `--accent-fill: var(--${accent}-fill)`,
   `--accent-2: var(--${accent}-2)`,
   `--accent-on: var(--${accent === 'yellow' ? 'yellow-on' : 'on-fill'})`,
-  width && `--w: ${width}px`,
-  height && `--h: ${height}px`,
-  `--root-size: ${(16 * scale).toFixed(3)}px`,
-]
-  .filter(Boolean)
-  .join(';\n  ');
+].join(';\n  ');
 ---
 
 <!doctype html>

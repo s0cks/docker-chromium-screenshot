@@ -1,16 +1,21 @@
 ---
-const { data } = Astro.props;
----
-<div class="shield">
-  <img src="/sec/heart/rand" />
-</div>
+interface Props {
+  hash: string;
+  color?: string;
+}
 
+import {generateHeartHashSVG} from '../../lib/heart.js';
+
+const { hash, color = '#d32f2f', } = Astro.props;
+const h = generateHeartHashSVG(hash, color);
+---
+<div class="heart" set:html={h} />
 <style lang="scss">
-  div.shield {
+  div.heart {
     display: block;
+    width: 100%;
     min-width: 32px;
-    min-height: 32px;
-    background-color: white;
-    border: 0.5px solid black;
+    max-width: 128px;
+    aspect-ratio: 1;
   }
 </style>

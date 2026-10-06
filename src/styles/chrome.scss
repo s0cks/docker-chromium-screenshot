@@ -1,5 +1,5 @@
-@forward 'masthead';
-@forward 'colophon';
+@forward "masthead";
+@forward "colophon";
 
 .slide {
   --pad-x: 3.125rem;
@@ -20,7 +20,9 @@
   grid-template-columns: var(--lead, 38.75%) minmax(0, 1fr);
   min-height: 0;
 }
-.body[data-layout='full'] { grid-template-columns: minmax(0, 1fr); }
+.body[data-layout="full"] {
+  grid-template-columns: minmax(0, 1fr);
+}
 
 .col {
   display: flex;
@@ -29,24 +31,46 @@
   min-height: 0;
   overflow: hidden;
   padding: 2.4rem var(--pad-x);
+  container-type: inline-size;
 }
-.col.lead { padding-right: 3.25rem; border-right: 1px solid var(--rule-strong); }
-.body[data-layout='full'] .col.lead { border-right: 0; }
+.col.lead {
+  padding-right: 3.25rem;
+  border-right: 1px solid var(--rule-strong);
+}
+
+.body[data-layout="full"] .col.lead {
+  border-right: 0;
+}
+
+.body[data-valign="start"] .col-inner {
+  margin-block: 0;
+}
 
 /* margin-block:auto centres short content and degrades to top-aligned
    (rather than clipping the top) when content is too tall */
-.col-inner { margin-block: auto; display: flex; flex-direction: column; gap: 1.6rem; min-width: 0; }
-.body[data-valign='start'] .col-inner { margin-block: 0; }
+.col-inner {
+  margin-block: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 1.6rem;
+  min-width: 0;
+}
+.body[data-valign="start"] .col-inner {
+  margin-block: 0;
+}
 
 .title {
-  font: 700 4.4rem/1.02 var(--font-display);
+  font: 700 clamp(2rem, 3cqi + 2.6rem, 5.2rem)/1.02 var(--font-display);
   letter-spacing: -0.015em;
   color: var(--ink);
   font-optical-sizing: auto;
   text-wrap: balance;
 }
 
-.lead .prose { font-size: 1.42rem; line-height: 1.62; }
+.lead .prose {
+  font-size: 1.42rem;
+  line-height: 1.62;
+}
 
 /* The main column is a two-track grid; blocks span both unless w=half */
 .grid-2 {
@@ -56,16 +80,60 @@
   row-gap: 1.6rem;
   align-content: start;
 }
-.grid-2 > * { grid-column: span 2; min-width: 0; }
-.grid-2 > [data-w='half'] { grid-column: span 1; }
-.grid-2 > .prose:has(> h3:only-child) + * { margin-top: 0; }
-.grid-2 > .prose:has(> h3:first-child):not(:first-child) { margin-top: 0.6rem; }
+.grid-2 > * {
+  grid-column: span 2;
+  min-width: 0;
+}
+.grid-2 > [data-w="half"] {
+  grid-column: span 1;
+}
+
+.grid-2 > .prose:has(> h3:only-child) + * {
+  margin-top: 0;
+}
+.grid-2 > .prose:has(> h3:first-child):not(:first-child) {
+  margin-top: 0.6rem;
+}
 
 /* Portrait and square formats stack the two columns */
 @container slide (aspect-ratio < 1.1) {
-  .body { grid-template-columns: minmax(0, 1fr); grid-template-rows: auto minmax(0, 1fr); }
-  .col.lead { border-right: 0; border-bottom: 1px solid var(--rule-strong); padding-bottom: 1.8rem; }
-  .col { padding-block: 1.8rem; }
-  .title { font-size: 3.4rem; }
-  .lead .prose { font-size: 1.3rem; }
+  .body {
+    grid-template-columns: minmax(0, 1fr);
+    grid-template-rows: auto minmax(0, 1fr);
+  }
+  .col.lead {
+    border-right: 0;
+    border-bottom: 1px solid var(--rule-strong);
+    padding-bottom: 1.8rem;
+  }
+  .col {
+    padding-block: 1.8rem;
+  }
+  .title {
+    font-size: 3.4rem;
+  }
+  .lead .prose {
+    font-size: 1.3rem;
+  }
+}
+
+@container slide (aspect-ratio < 0.65) {
+  .slide {
+    --pad-x: 1.9rem;
+  }
+  .col {
+    padding-block: 1.2rem;
+  }
+  .title {
+    font-size: 2.7rem;
+  }
+}
+
+@container slide (aspect-ratio > 1.7) and (aspect-ratio < 2.3) {
+  .col {
+    padding-block: 1.6rem;
+  }
+  .title {
+    font-size: clamp(1.8rem, 3cqi + 2rem, 3.6rem);
+  }
 }

@@ -29,8 +29,7 @@ async function fetchJSON(url) {
   return res.json();
 }
 
-function applyTheme(root, { theme, accent, width, height }) {
-  const scale = width && height ? Math.sqrt((width * height) / (1600 * 1000)) : 1;
+function applyTheme(root, { theme, accent }) {
   root.dataset.theme = theme;
   // A real (if injected) stylesheet, not inline style properties: inline
   // styles would outrank the /cards/_shared/theme.css link regardless
@@ -43,15 +42,14 @@ function applyTheme(root, { theme, accent, width, height }) {
     const overrides = document.querySelector('link[href="/cards/_shared/theme.css"]');
     document.head.insertBefore(style, overrides ?? document.head.firstChild);
   }
+  // No baked pixel size here either — same fluid vmin/cqi scale as the
+  // server-rendered path (main.scss, chrome.scss); only theme vars travel.
   const vars = [
     `--accent: var(--${accent})`,
     `--accent-fill: var(--${accent}-fill)`,
     `--accent-2: var(--${accent}-2)`,
     `--accent-on: var(--${accent === 'yellow' ? 'yellow-on' : 'on-fill'})`,
-    width && `--w: ${width}px`,
-    height && `--h: ${height}px`,
-    `--root-size: ${(16 * scale).toFixed(3)}px`,
-  ].filter(Boolean);
+  ];
   style.textContent = `:root {\n  ${vars.join(';\n  ')};\n}`;
 }
 
