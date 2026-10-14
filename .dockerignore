@@ -1,1 +1,13 @@
+.astro/
+.git/
+.rumdl_cache/
+brand/
+cards/
+docs/
 node_modules/
+out/
+LICENSE
+/*.md
+/*.txt
+pnpm-lock.yaml
+pnpm-workspace.yaml

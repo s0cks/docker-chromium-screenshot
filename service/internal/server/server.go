@@ -98,6 +98,7 @@ func (s *Server) handleMeta(w http.ResponseWriter, r *http.Request) {
 
 		extra = mergeExtra(extra, cardExtra)
 	}
+
 	payload.Extra = extra
 	writeJSON(w, http.StatusOK, payload)
 }
@@ -126,7 +127,7 @@ func (s *Server) handleLayoutList(w http.ResponseWriter, r *http.Request) {
 
 	var ids []string
 	for _, c := range list {
-		if _, ok := c.LayoutSource(); ok {
+		if _, ok := c.Source(); ok {
 			ids = append(ids, c.ID)
 		}
 	}
@@ -149,7 +150,7 @@ func (s *Server) handleLayout(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	src, ok := card.LayoutSource()
+	src, ok := card.Source()
 	if !ok {
 		writeJSON(w, http.StatusNotFound, map[string]string{"error": id + " has no layout.json/yaml/jsonnet"})
 		return
@@ -161,13 +162,13 @@ func (s *Server) handleLayout(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	if logoURL, ok := card.LogoURL(); ok {
-		out, err = cards.InjectLogo(out, logoURL)
-		if err != nil {
-			writeJSON(w, http.StatusInternalServerError, map[string]string{"error": err.Error()})
-			return
-		}
-	}
+	// if logoURL, ok := card.LogoURL(); ok {
+	// 	out, err = cards.InjectLogo(out, logoURL)
+	// 	if err != nil {
+	// 		writeJSON(w, http.StatusInternalServerError, map[string]string{"error": err.Error()})
+	// 		return
+	// 	}
+	// }
 
 	w.Header().Set("Content-Type", "application/json; charset=utf-8")
 	w.Header().Set("Cache-Control", "no-store")

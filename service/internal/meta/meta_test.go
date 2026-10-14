@@ -10,6 +10,7 @@ func TestHashDirEmptyAndMissing(t *testing.T) {
 	if h := HashDir(""); h.Root != "" {
 		t.Fatalf("empty dir arg: want zero value, got %+v", h)
 	}
+
 	if h := HashDir(filepath.Join(t.TempDir(), "nope")); h.Root != "" {
 		t.Fatalf("missing dir: want zero value, got %+v", h)
 	}
@@ -26,12 +27,15 @@ func TestHashDirDeterministic(t *testing.T) {
 	if h1.Root == "" {
 		t.Fatal("expected a non-empty root hash")
 	}
+
 	if h1.Root != h2.Root {
 		t.Fatalf("hashing twice should be stable: %s != %s", h1.Root, h2.Root)
 	}
+
 	if len(h1.Files) != 2 {
 		t.Fatalf("dotfiles should be skipped: got %d files, want 2", len(h1.Files))
 	}
+
 	if _, ok := h1.Files[".hidden"]; ok {
 		t.Fatal(".hidden should not be hashed")
 	}
@@ -49,6 +53,7 @@ func TestLoadExtraPrefersJSONThenYAML(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
+
 	if extra["owner"] != "yaml-owner" {
 		t.Fatalf("want owner from yaml, got %v", extra)
 	}
@@ -58,6 +63,7 @@ func TestLoadExtraPrefersJSONThenYAML(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
+
 	if extra["owner"] != "json-owner" {
 		t.Fatalf("meta.json should take priority over meta.yaml, got %v", extra)
 	}
@@ -69,9 +75,11 @@ func TestLoadExtraJsonnet(t *testing.T) {
 	extra, err := LoadExtra(dir, func(path string) (string, error) {
 		return `{"owner":"jsonnet-owner","n":2}`, nil
 	})
+
 	if err != nil {
 		t.Fatal(err)
 	}
+
 	if extra["owner"] != "jsonnet-owner" || extra["n"].(float64) != 2 {
 		t.Fatalf("unexpected extra: %v", extra)
 	}

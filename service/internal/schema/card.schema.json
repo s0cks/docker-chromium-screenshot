@@ -1,0 +1,96 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/s0cks/docker-chromium-screenshot/service/schema/card.schema.json",
+  "title": "Card",
+  "description": "The compiled, canonical form of one card.{md,json,yaml,yml,jsonnet} — one file, one image. Produced identically by the Markdown and JSON/YAML/jsonnet compiler paths.",
+  "type": "object",
+  "required": ["meta", "slide"],
+  "additionalProperties": false,
+  "properties": {
+    "meta": { "$ref": "#/$defs/meta" },
+    "slide": { "$ref": "#/$defs/slide" }
+  },
+  "$defs": {
+    "meta": {
+      "type": "object",
+      "required": ["series", "theme", "accent", "size"],
+      "additionalProperties": true,
+      "properties": {
+        "series": { "type": "string", "minLength": 1, "description": "The title." },
+        "author": { "type": "string", "description": "Rendered top-right; was called 'handle'." },
+        "theme": { "type": "string", "enum": ["light", "dark"] },
+        "accent": { "type": "string", "description": "Any Flexoki hue, e.g. purple, orange, blue." },
+        "size": {
+          "description": "A preset name or an explicit [width, height] in pixels.",
+          "oneOf": [
+            { "type": "string", "enum": ["landscape", "wide", "og", "square", "portrait", "story"] },
+            { "type": "array", "items": { "type": "integer", "exclusiveMinimum": 0 }, "minItems": 2, "maxItems": 2 }
+          ]
+        },
+        "logo": { "type": ["string", "null"], "description": "URL/path, or null to explicitly suppress auto-detection." },
+        "budget": { "type": "integer", "exclusiveMinimum": 0, "description": "Markdown-only: word budget per card; ignored for JSON/YAML/jsonnet cards." },
+        "provenance": { "$ref": "#/$defs/provenance" }
+      }
+    },
+    "provenance": {
+      "description": "Always present: which compiler, commit and build produced this card.",
+      "type": "object",
+      "required": ["compiler", "commit", "builtAt"],
+      "properties": {
+        "compiler": { "type": "string", "enum": ["markdown", "json", "yaml", "jsonnet"] },
+        "commit": { "type": "string" },
+        "builtAt": { "type": "string", "format": "date-time" }
+      }
+    },
+    "slide": {
+      "type": "object",
+      "required": ["panels"],
+      "additionalProperties": false,
+      "properties": {
+        "title": { "type": ["string", "null"] },
+        "kicker": { "type": ["string", "null"] },
+        "panels": {
+          "type": "array",
+          "minItems": 1,
+          "maxItems": 4,
+          "items": { "$ref": "#/$defs/panel" }
+        }
+      }
+    },
+    "panel": {
+      "type": "object",
+      "required": ["nodes"],
+      "additionalProperties": false,
+      "properties": {
+        "nodes": { "type": "array", "items": { "$ref": "#/$defs/node" } }
+      }
+    },
+    "node": {
+      "type": "object",
+      "oneOf": [
+        {
+          "required": ["kind", "html"],
+          "properties": {
+            "kind": { "const": "md" },
+            "html": { "type": "string" }
+          },
+          "additionalProperties": false
+        },
+        {
+          "required": ["kind", "name"],
+          "properties": {
+            "kind": { "const": "block" },
+            "name": {
+              "type": "string",
+              "enum": ["callout", "quote", "stats", "findings", "threads", "timeline", "chart", "profile", "sources", "qr", "image"]
+            },
+            "attrs": { "type": "object" },
+            "data": {},
+            "md": { "type": "string" }
+          },
+          "additionalProperties": false
+        }
+      ]
+    }
+  }
+}

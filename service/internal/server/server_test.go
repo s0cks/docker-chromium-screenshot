@@ -50,16 +50,19 @@ func TestMetaServesBuildInfoAndSharedExtra(t *testing.T) {
 	if rec.Code != http.StatusOK {
 		t.Fatalf("status = %d, body = %s", rec.Code, rec.Body)
 	}
-	var body map[string]interface{}
+
+	var body map[string]any
 	json.Unmarshal(rec.Body.Bytes(), &body)
 	if body["version"] == nil {
 		t.Fatalf("missing version: %s", rec.Body)
 	}
-	hashes := body["hashes"].(map[string]interface{})
+
+	hashes := body["hashes"].(map[string]any)
 	if _, ok := hashes["cards"]; !ok {
 		t.Fatalf("expected a cards hash: %s", rec.Body)
 	}
-	extra := body["extra"].(map[string]interface{})
+
+	extra := body["extra"].(map[string]any)
 	if extra["owner"] != "shared-owner" || extra["org"] != "acme" {
 		t.Fatalf("expected shared meta, got %v", extra)
 	}
@@ -72,12 +75,14 @@ func TestMetaForCardMergesSharedAndCardOwnMeta(t *testing.T) {
 	if rec.Code != http.StatusOK {
 		t.Fatalf("status = %d, body = %s", rec.Code, rec.Body)
 	}
-	var body map[string]interface{}
+
+	var body map[string]any
 	json.Unmarshal(rec.Body.Bytes(), &body)
-	extra := body["extra"].(map[string]interface{})
+	extra := body["extra"].(map[string]any)
 	if extra["owner"] != "card-owner" {
 		t.Fatalf("card's own meta should win over shared: %v", extra)
 	}
+
 	if extra["org"] != "acme" {
 		t.Fatalf("shared-only keys should still be present: %v", extra)
 	}
@@ -99,12 +104,14 @@ func TestLayoutServesCompiledJSONWithInjectedLogo(t *testing.T) {
 	if rec.Code != http.StatusOK {
 		t.Fatalf("status = %d, body = %s", rec.Code, rec.Body)
 	}
-	var body map[string]interface{}
+
+	var body map[string]any
 	json.Unmarshal(rec.Body.Bytes(), &body)
-	meta := body["meta"].(map[string]interface{})
+	meta := body["meta"].(map[string]any)
 	if meta["series"] != "Demo" {
 		t.Fatalf("unexpected: %s", rec.Body)
 	}
+
 	if meta["logo"] != "/cards/demo/logo.svg" {
 		t.Fatalf("expected the card's own logo to be injected, got %v", meta["logo"])
 	}

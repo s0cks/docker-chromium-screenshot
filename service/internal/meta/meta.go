@@ -174,6 +174,7 @@ func normalizeYAML(v any) any {
 
 	default:
 		return v
+
 	}
 }
 
