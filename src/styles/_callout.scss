@@ -25,7 +25,7 @@
     letter-spacing: 0.02em;
   }
 
-  &[data-tone='plain'] {
+  &[data-tone="plain"] {
     color: var(--ink);
     background: var(--panel);
     border-left: 0.25rem solid var(--accent);

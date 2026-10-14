@@ -2,7 +2,6 @@
 import Block from './Block.astro';
 import Colophon from './chrome/Colophon.astro';
 import Masthead from './chrome/Masthead.astro';
-import Watermark from '../assets/watermark.svg';
 
 const { dossier, slide } = Astro.props;
 const { meta, slides, size } = dossier;
@@ -38,9 +37,9 @@ const lead = slide.config.lead ? `${slide.config.lead}%` : undefined;
           total={slides.length} />
 
   <div class="body-canvas-wrapper relative w-full h-full">
-   <div class="dossier-watermark-anchor absolute z-0 pointer-events-none select-none opacity-[0.035] text-current">
-     <Watermark class="w-full h-full fill-current" />
-   </div>
+   <!-- <div class="dossier-watermark-anchor absolute z-0 pointer-events-none select-none opacity-[0.035] text-current"> -->
+   <!--   <Watermark class="w-full h-full fill-current" /> -->
+   <!-- </div> -->
 
     <div class="body relative z-10 w-full h-full" data-layout={slide.layout} data-valign={slide.config.valign ?? 'center'} style={lead ? `--lead:${lead}` : undefined}>
       {full ? (

@@ -1,4 +1,4 @@
-@use 'sass:map';
+@use "sass:map";
 
 // Brand tokens: Flexoki (https://stephango.com/flexoki) in light and dark.
 //
@@ -22,14 +22,38 @@
 // are also recognized CSS colour keywords, which Sass will otherwise try to
 // interpret as actual colour values rather than plain identifiers.
 $hues: (
-  'red': (600: #af3029, 400: #d14d41),
-  'orange': (600: #bc5215, 400: #da702c),
-  'yellow': (600: #ad8301, 400: #d0a215),
-  'green': (600: #66800b, 400: #879a39),
-  'cyan': (600: #24837b, 400: #3aa99f),
-  'blue': (600: #205ea6, 400: #4385be),
-  'purple': (600: #5e409d, 400: #8b7ec8),
-  'magenta': (600: #a02f6f, 400: #ce5d97),
+  "red": (
+    600: #af3029,
+    400: #d14d41,
+  ),
+  "orange": (
+    600: #bc5215,
+    400: #da702c,
+  ),
+  "yellow": (
+    600: #ad8301,
+    400: #d0a215,
+  ),
+  "green": (
+    600: #66800b,
+    400: #879a39,
+  ),
+  "cyan": (
+    600: #24837b,
+    400: #3aa99f,
+  ),
+  "blue": (
+    600: #205ea6,
+    400: #4385be,
+  ),
+  "purple": (
+    600: #5e409d,
+    400: #8b7ec8,
+  ),
+  "magenta": (
+    600: #a02f6f,
+    400: #ce5d97,
+  ),
 );
 
 :root {
@@ -56,9 +80,10 @@ $hues: (
   }
 
   // Typography
-  --font-display: 'Inter', 'Iowan Old Style', Georgia, serif;
-  --font-sans: 'Alegreya Sans', 'Helvetica Neue', Arial, sans-serif;
-  --font-mono: 'Monaspace Argon', ui-monospace, 'SF Mono', Menlo, monospace;
+  --font-display: "Inter", "Iowan Old Style", Georgia, serif;
+  --font-sans: "Alegreya Sans", "Helvetica Neue", Arial, sans-serif;
+  --font-title: "Bebas Neue";
+  --font-mono: "Monaspace Argon", ui-monospace, "SF Mono", Menlo, monospace;
 
   // Solid-fill text; yellow is too light for paper-coloured text
   --on-fill: var(--paper);
@@ -66,7 +91,7 @@ $hues: (
 }
 
 :root,
-[data-theme='light'] {
+[data-theme="light"] {
   --bg: var(--paper);
   --panel: var(--b50);
   --rule: var(--b150);
@@ -90,7 +115,7 @@ $hues: (
   }
 }
 
-[data-theme='dark'] {
+[data-theme="dark"] {
   --bg: var(--black);
   --panel: var(--b950);
   --rule: var(--b900);
@@ -124,12 +149,27 @@ $hues: (
   --t-on: var(--ink-on);
   --t-tint: var(--panel);
 }
-[data-tone='ink'] { --t: var(--ink); --t-fill: var(--ink-fill); --t-on: var(--ink-on); --t-tint: var(--panel); }
-[data-tone='muted'] { --t: var(--ink-2); --t-fill: var(--b600); --t-on: var(--paper); --t-tint: var(--panel); }
-[data-tone='accent'] { --t: var(--accent); --t-fill: var(--accent-fill); --t-on: var(--accent-on); --t-tint: color-mix(in srgb, var(--accent) 12%, var(--bg)); }
+[data-tone="ink"] {
+  --t: var(--ink);
+  --t-fill: var(--ink-fill);
+  --t-on: var(--ink-on);
+  --t-tint: var(--panel);
+}
+[data-tone="muted"] {
+  --t: var(--ink-2);
+  --t-fill: var(--b600);
+  --t-on: var(--paper);
+  --t-tint: var(--panel);
+}
+[data-tone="accent"] {
+  --t: var(--accent);
+  --t-fill: var(--accent-fill);
+  --t-on: var(--accent-on);
+  --t-tint: color-mix(in srgb, var(--accent) 12%, var(--bg));
+}
 
 @each $hue, $steps in $hues {
-  [data-tone='#{$hue}'] {
+  [data-tone="#{$hue}"] {
     --t: var(--#{$hue});
     --t-fill: var(--#{$hue}-fill);
     --t-on: var(--on-fill);
@@ -138,7 +178,7 @@ $hues: (
 }
 // yellow's two exceptions: dark text on a light fill, and a touch more tint
 // to stay legible (overrides the loop's generic defaults above)
-[data-tone='yellow'] {
+[data-tone="yellow"] {
   --t-on: var(--yellow-on);
   --t-tint: color-mix(in srgb, var(--yellow) 14%, var(--bg));
 }

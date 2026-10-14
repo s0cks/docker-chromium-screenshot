@@ -20,6 +20,10 @@ The network is not slow. Two terminals are.
 Test
 ```
 
+```quote by="Test" source="Test" tone="red"
+Test
+```
+
 ---
 
 ## Callouts
@@ -271,4 +275,11 @@ items:
 ```qr
 link: https://github.com/s0cks/docker-chromium-screenshot
 label: Source and build notes
+```
+
+---
+
+## Heatmaps
+
+```heatmap
 ```

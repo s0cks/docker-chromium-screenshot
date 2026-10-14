@@ -11,7 +11,7 @@ COPY service/ /svc/
 WORKDIR /svc
 RUN CGO_ENABLED=0 \
   go build -trimpath \
-  -ldflags "-s -w -X main.version=${APP_VERSION} -X main.commit=${GIT_COMMIT} -X main.branch=${GIT_BRANCH} -X main.buildTime=${BUILD_TIME}" \
+  -ldflags "-s -w -X internal.meta.Version=${APP_VERSION} -X internal.meta.Commit=${GIT_COMMIT} -X internal.meta.Branch=${GIT_BRANCH} -X internal.meta.BuildTime=${BUILD_TIME}" \
   -o dossier-service \
   .
 
@@ -33,7 +33,7 @@ ENV ASTRO_TELEMETRY_DISABLED=1 \
 WORKDIR /app
 
 COPY package.json ./
-RUN npm i --no-audit --no-fund
+RUN npm i
 
 COPY --from=service /svc/dossier-service /app/service/dossier-service
 COPY astro.config.mjs ./

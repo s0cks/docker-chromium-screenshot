@@ -10,6 +10,7 @@
   "scripts": {
     "dev": "astro dev",
     "build": "astro build",
+    "check": "astro check",
     "render": "node scripts/render.mjs",
     "test": "node --test test/*.test.js",
     "clean": "rm -rf dist out .astro",
@@ -31,6 +32,7 @@
   "author": "s0cks",
   "license": "MIT",
   "dependencies": {
+    "@astrojs/check": "^0.9.10",
     "@fontsource/ibm-plex-mono": "^5.3.0",
     "@fontsource/ibm-plex-sans": "^5.3.0",
     "@fontsource/newsreader": "^5.3.0",

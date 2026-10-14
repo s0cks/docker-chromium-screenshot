@@ -15,10 +15,10 @@ import (
 	"github.com/s0cks/docker-chromium-screenshot/service/internal/server"
 )
 
-var RootCommand *cobra.Command
+var RootCommand cobra.Command
 
 func init() {
-	RootCommand = &cobra.Command{
+	RootCommand = cobra.Command{
 		Use: "service",
 		PersistentPreRunE: func(cmd *cobra.Command, args []string) error {
 			viper.SetEnvPrefix("SERVICE")
