@@ -1,0 +1,15 @@
+{
+  "nodes": [
+    { "id": "revenue", "name": "Gross Revenue" },
+    { "id": "cogs", "name": "Cost of Goods Sold" },
+    { "id": "profit", "name": "Gross Profit" },
+    { "id": "opex", "name": "Operating Expenses" },
+    { "id": "net", "name": "Net Margin" }
+  ],
+  "links": [
+    { "source": "revenue", "target": "cogs", "value": 40 },
+    { "source": "revenue", "target": "profit", "value": 60 },
+    { "source": "profit", "target": "opex", "value": 35 },
+    { "source": "profit", "target": "net", "value": 25 }
+  ]
+}

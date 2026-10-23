@@ -1,8 +1,106 @@
 ---
 // https://observablehq.com/@d3/sankey
+import * as d3 from "d3";
+import defaultSankeyData from "./data/sankey.json";
+import { sankey as d3Sankey, sankeyLinkHorizontal, sankeyJustify } from "d3-sankey";
 
-interface Props {}
+interface Node {
+  id: string;
+  name: string;
+}
 
-const { } = Astro.props;
+interface Link {
+  source: string;
+  target: string;
+  value: number;
+}
+
+interface Props {
+  data?: { nodes: Node[], links: Link[] };
+}
+
+const width = 960;
+const height = 500;
+const defaultPadding = 1;
+
+const {
+  graphNodes = defaultSankeyData.nodes,
+  graphLinks = defaultSankeyData.links,
+} = Astro.props;
+
+const sankeyGen = d3Sankey<Node, Link>()
+  .nodeWidth(16)
+  .nodePadding(8)
+  .extent([ [ 0, 0 ], [ width, height ] ])
+  .nodeId(d => d.id)
+  .nodeAlign(sankeyJustify);
+
+const { nodes, links } = sankeyGen({
+  nodes: graphNodes.map(d => ({ ...d })),
+  links: graphLinks.map(d => ({ ...d }))
+});
+const colorScale = d3.scaleOrdinal(d3.schemeTableau10);
+const pathGen= sankeyLinkHorizontal();
 ---
-<span>TODO</span>
+<div class="chart-container">
+  <svg viewBox={`0 0 ${width} ${height}`}
+      preserveAspectRatio="xMidYMid meet">
+    <g
+      class="links"
+      fill="none"
+      stroke-opacity="0.25"
+      style="mix-blend-mode: add;">
+      {links.map((link) => (
+        <path
+          d={pathGen(link)}
+          stroke={colorScale((link.source as any).id)}
+          stroke-width={Math.max(1, link.width ?? 0)}
+        />
+      ))}
+    </g>
+
+     <g class="nodes">
+      {nodes.map((node: any) => (
+        <g class="node-group">
+          <rect
+            x={node.x0}
+            y={node.y0}
+            width={node.x1 - node.x0}
+            height={node.y1 - node.y0}
+            fill={colorScale(node.id)}
+            stroke="#111"
+            stroke-width="1"
+          />
+          <text
+            x={node.x0 < width / 2 ? node.x1 + 24 : node.x0 - 24}
+            y={(node.y1 + node.y0) / 2}
+            dy="0.35em"
+            text-anchor={node.x0 < width / 2 ? "start" : "end"}
+            font-size="16px"
+            font-family="monospace"
+            fill="stroke-context"
+          >
+            {node.name}
+          </text>
+        </g>
+      ))}
+    </g>
+  </svg>
+</div>
+
+<style lang="scss">
+  .chart-container {
+    display: flex;
+    align-items: center;
+
+    svg {
+      fill: var(--ink);
+      background-color: var(--panel);
+
+      padding: 1rem;
+
+      display: block;
+      object-fit: fill;
+    }
+  }
+</style>
