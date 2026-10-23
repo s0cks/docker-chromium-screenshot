@@ -2,15 +2,13 @@
 @forward "colophon";
 
 .slide {
-  --pad-x: 3.125rem;
+  --pad-x: 1.625rem;
   width: 100%;
   height: 100%;
   display: grid;
   grid-template-rows: auto 1fr auto;
   background: var(--bg);
   color: var(--ink);
-  //TODO(@s0cks):
-  // overflow: hidden;
   container: slide / size;
 }
 

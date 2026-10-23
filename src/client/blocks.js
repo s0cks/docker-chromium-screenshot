@@ -5,6 +5,7 @@ import { mdi, md } from "../lib/markdown.js";
 import { el } from "./dom.js";
 import { renderChart } from "./chart-d3.js";
 import { renderTimeline as renderTimelineD3 } from "./timeline-d3.js";
+import { renderNetworkGraph as renderNetworkGraphD3 } from "./network-graph.js";
 
 const STATUS_TONE = {
   open: "accent",
@@ -165,6 +166,8 @@ const RENDERERS = {
   sources: renderSources,
   chart: (container, node) =>
     renderChart(container, node.data, node.attrs ?? {}),
+  network: (container, node) =>
+    renderNetworkGraphD3(container, node.data, node.attrs ?? {}),
 };
 
 /** Render one parsed node ({ kind: 'md', md } or { kind: 'block', name, ... }) into container. */

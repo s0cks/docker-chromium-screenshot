@@ -1,0 +1,481 @@
+{
+  "$schema": "http://json-schema.org",
+  "title": "DossierCardLayout",
+  "description": "JSON Schema mapping for Dossier JSON, YAML, and Jsonnet card files.",
+  "type": "object",
+  "required": ["meta", "slides"],
+  "properties": {
+    "meta": {
+      "$ref": "#/definitions/CardMeta"
+    },
+    "slides": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/Slide"
+      }
+    }
+  },
+  "definitions": {
+    "CardMeta": {
+      "type": "object",
+      "required": ["series", "accent", "size"],
+      "properties": {
+        "series": {
+          "type": "string",
+          "default": "Dossier",
+          "description": "Header and footer title."
+        },
+        "handle": {
+          "type": "string",
+          "description": "Footer right; trailing digits take the accent colour."
+        },
+        "theme": {
+          "type": "string",
+          "enum": ["light", "dark"],
+          "default": "light"
+        },
+        "accent": {
+          "type": "string",
+          "enum": [
+            "red",
+            "orange",
+            "yellow",
+            "green",
+            "cyan",
+            "blue",
+            "purple",
+            "magenta"
+          ],
+          "default": "purple"
+        },
+        "size": {
+          "type": "string",
+          "default": "landscape",
+          "description": "Predefined layout preset dimensions or explicit WxH configuration string.",
+          "oneOf": [
+            {
+              "enum": ["landscape", "wide", "og", "square", "portrait", "story"]
+            },
+            { "type": "string", "pattern": "^\\d{3,5}x\\d{3,5}$" }
+          ]
+        },
+        "logo": {
+          "type": ["string", "null"],
+          "description": "A file path string to explicit override. Pass null to suppress auto-detection."
+        },
+        "ref": { "type": ["string", "null"] },
+        "budget": {
+          "type": "integer",
+          "default": 200,
+          "description": "Word budget per slide limit allocation checking metric."
+        }
+      }
+    },
+    "Slide": {
+      "type": "object",
+      "required": ["lead", "main"],
+      "properties": {
+        "title": { "type": ["string", "null"] },
+        "kicker": {
+          "type": ["string", "null"],
+          "description": "Defaults to slide title configuration."
+        },
+        "layout": {
+          "type": ["string", "null"],
+          "enum": ["split", "full", null]
+        },
+        "valign": {
+          "type": "string",
+          "enum": ["center", "start"],
+          "default": "center"
+        },
+        "lead_width": {
+          "type": ["integer", "null"],
+          "minimum": 0,
+          "maximum": 100
+        },
+        "lead": { "type": "array", "items": { "$ref": "#/definitions/Node" } },
+        "main": { "type": "array", "items": { "$ref": "#/definitions/Node" } }
+      }
+    },
+    "Node": {
+      "type": "object",
+      "required": ["kind"],
+      "properties": {
+        "kind": { "type": "string", "enum": ["md", "block"] }
+      },
+      "if": { "properties": { "kind": { "const": "md" } } },
+      "then": {
+        "required": ["md"],
+        "properties": {
+          "md": {
+            "type": "string",
+            "description": "Raw server-compiled markdown layout slice block content."
+          }
+        }
+      },
+      "else": {
+        "required": ["name", "attrs"],
+        "properties": {
+          "name": {
+            "type": "string",
+            "enum": [
+              "callout",
+              "quote",
+              "stats",
+              "findings",
+              "threads",
+              "timeline",
+              "chart",
+              "profile",
+              "sources",
+              "qr"
+            ]
+          },
+          "attrs": {
+            "type": "object",
+            "properties": {
+              "w": {
+                "type": "string",
+                "enum": ["full", "half"],
+                "default": "full"
+              },
+              "h": { "type": "string" }
+            }
+          }
+        },
+        "allOf": [
+          { "$ref": "#/definitions/Blocks/Callout" },
+          { "$ref": "#/definitions/Blocks/Quote" },
+          { "$ref": "#/definitions/Blocks/Stats" },
+          { "$ref": "#/definitions/Blocks/Findings" },
+          { "$ref": "#/definitions/Blocks/Threads" },
+          { "$ref": "#/definitions/Blocks/Timeline" },
+          { "$ref": "#/definitions/Blocks/Chart" },
+          { "$ref": "#/definitions/Blocks/Profile" },
+          { "$ref": "#/definitions/Blocks/Sources" },
+          { "$ref": "#/definitions/Blocks/Qr" }
+        ]
+      }
+    },
+
+    "Blocks/Callout": {
+      "if": { "properties": { "name": { "const": "callout" } } },
+      "then": {
+        "required": ["md"],
+        "properties": {
+          "md": { "type": "string" },
+          "attrs": {
+            "type": "object",
+            "properties": {
+              "tone": {
+                "type": "string",
+                "enum": [
+                  "ink",
+                  "accent",
+                  "plain",
+                  "red",
+                  "orange",
+                  "yellow",
+                  "green",
+                  "cyan",
+                  "blue",
+                  "purple",
+                  "magenta"
+                ]
+              },
+              "mono": { "type": "boolean" }
+            }
+          }
+        }
+      }
+    },
+
+    "Blocks/Quote": {
+      "if": { "properties": { "name": { "const": "quote" } } },
+      "then": {
+        "required": ["md"],
+        "properties": {
+          "md": { "type": "string" },
+          "attrs": {
+            "type": "object",
+            "properties": {
+              "by": { "type": "string" },
+              "source": { "type": "string" },
+              "tone": { "type": "string" }
+            }
+          }
+        }
+      }
+    },
+
+    "Blocks/Stats": {
+      "if": { "properties": { "name": { "const": "stats" } } },
+      "then": {
+        "required": ["data"],
+        "properties": {
+          "attrs": {
+            "type": "object",
+            "properties": { "cols": { "type": "integer" } }
+          },
+          "data": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "required": ["value", "label"],
+              "properties": {
+                "value": { "type": ["string", "number"] },
+                "label": { "type": "string" },
+                "note": { "type": "string" },
+                "tone": {
+                  "type": "string",
+                  "description": "Filled style tile if declared, fallback outline."
+                },
+                "delta": { "type": ["string", "number"] },
+                "vs": { "type": "string" },
+                "trend": { "type": "string", "enum": ["good", "bad"] }
+              }
+            }
+          }
+        }
+      }
+    },
+
+    "Blocks/Findings": {
+      "if": { "properties": { "name": { "const": "findings" } } },
+      "then": {
+        "required": ["data"],
+        "properties": {
+          "data": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "required": ["head", "text"],
+              "properties": {
+                "head": { "type": "string" },
+                "text": { "type": "string" },
+                "tone": { "type": "string" },
+                "source": {
+                  "oneOf": [
+                    { "type": "string" },
+                    { "type": "array", "items": { "type": "string" } }
+                  ]
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+
+    "Blocks/Threads": {
+      "if": { "properties": { "name": { "const": "threads" } } },
+      "then": {
+        "required": ["data"],
+        "properties": {
+          "attrs": {
+            "type": "object",
+            "properties": { "labels": { "type": "boolean" } }
+          },
+          "data": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "required": ["title", "text", "status"],
+              "properties": {
+                "title": { "type": "string" },
+                "text": { "type": "string" },
+                "source": { "type": "string" },
+                "status": {
+                  "type": "string",
+                  "enum": [
+                    "open",
+                    "confirmed",
+                    "alleged",
+                    "disputed",
+                    "closed",
+                    "watch"
+                  ]
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+
+    "Blocks/Timeline": {
+      "if": { "properties": { "name": { "const": "timeline" } } },
+      "then": {
+        "required": ["data"],
+        "properties": {
+          "attrs": {
+            "type": "object",
+            "properties": {
+              "orientation": {
+                "type": "string",
+                "enum": ["vertical", "horizontal"],
+                "default": "vertical"
+              },
+              "scale": {
+                "type": "string",
+                "enum": ["even", "time"],
+                "default": "even"
+              }
+            }
+          },
+          "data": {
+            "type": "object",
+            "required": ["events"],
+            "properties": {
+              "events": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "required": ["date", "title", "text"],
+                  "properties": {
+                    "date": { "type": "string" },
+                    "title": { "type": "string" },
+                    "text": { "type": "string" },
+                    "tone": { "type": "string" },
+                    "side": { "type": "string", "enum": ["up", "down"] }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+
+    "Blocks/Chart": {
+      "if": { "properties": { "name": { "const": "chart" } } },
+      "then": {
+        "required": ["data"],
+        "properties": {
+          "data": {
+            "type": "object",
+            "required": ["type", "source"],
+            "properties": {
+              "type": {
+                "type": "string",
+                "enum": ["bar", "line", "area", "hbar", "donut"]
+              },
+              "title": { "type": "string" },
+              "x": { "type": "array", "items": { "type": "string" } },
+              "series": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "required": ["name", "values"],
+                  "properties": {
+                    "name": { "type": "string" },
+                    "values": {
+                      "type": "array",
+                      "items": { "type": "number" }
+                    },
+                    "tone": { "type": "string" }
+                  }
+                }
+              },
+              "items": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "required": ["label", "value"],
+                  "properties": {
+                    "label": { "type": "string" },
+                    "value": { "type": "number" },
+                    "tone": { "type": "string" }
+                  }
+                }
+              },
+              "format": {
+                "type": "object",
+                "properties": {
+                  "prefix": { "type": "string" },
+                  "suffix": { "type": "string" },
+                  "decimals": { "type": "integer" },
+                  "compact": { "type": "boolean" }
+                }
+              },
+              "min": { "type": "number" },
+              "max": { "type": "number" },
+              "stacked": { "type": "boolean" },
+              "labels": { "type": "boolean" },
+              "annotations": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "required": ["x", "text"],
+                  "properties": {
+                    "x": { "type": "string" },
+                    "text": { "type": "string" }
+                  }
+                }
+              },
+              "center": {
+                "type": "object",
+                "required": ["value", "label"],
+                "properties": {
+                  "value": { "type": "string" },
+                  "label": { "type": "string" }
+                }
+              },
+              "source": { "type": "string" }
+            }
+          }
+        }
+      }
+    },
+    "Blocks/Profile": {
+      "if": { "properties": { "name": { "const": "profile" } } },
+      "then": {
+        "required": ["data"],
+        "properties": {
+          "data": {
+            "type": "object",
+            "required": ["rows"],
+            "properties": {
+              "title": { "type": "string" },
+              "rows": {
+                "type": "object",
+                "additionalProperties": { "type": "string" },
+                "description": "Dynamic key-value pairs representing rows of profile data."
+              }
+            }
+          }
+        }
+      }
+    },
+    "Blocks/Sources": {
+      "if": { "properties": { "name": { "const": "sources" } } },
+      "then": {
+        "required": ["data"],
+        "properties": {
+          "data": {
+            "type": "array",
+            "items": { "type": "string" }
+          }
+        }
+      }
+    },
+    "Blocks/Qr": {
+      "if": { "properties": { "name": { "const": "qr" } } },
+      "then": {
+        "required": ["data"],
+        "properties": {
+          "data": {
+            "type": "object",
+            "required": ["link", "label"],
+            "properties": {
+              "link": { "type": "string", "format": "uri" },
+              "label": { "type": "string" },
+              "size": { "type": "integer" }
+            }
+          }
+        }
+      }
+    }
+  }
+}

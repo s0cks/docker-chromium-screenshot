@@ -35,6 +35,7 @@ export const BLOCKS = {
   profile: 'yaml',
   sources: 'yaml',
   qr: 'yaml',
+  network: "yaml",
 };
 
 export const SIZE_PRESETS = {

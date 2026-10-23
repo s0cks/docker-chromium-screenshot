@@ -1,0 +1,286 @@
+---
+import fs from 'node:fs';
+import path from 'node:path';
+import { calculateStaticNetworkLayout } from "../../lib/network.js";
+
+const iconsDir = path.resolve('src/assets/nodes/');
+
+const kinds = [
+  "asset",
+  "bank-account",
+  "bank",
+  "business",
+  "charity",
+  "group",
+  "legal-case",
+  "location",
+  "organization",
+  "person",
+  "shell",
+  "test",
+  "transaction",
+  "wallet",
+];
+
+const iconRegistry = kinds.map(kind => {
+  const fileName = `${kind}.svg`;
+  const filePath = path.join(iconsDir, fileName);
+
+  let rawContent = '';
+  try {
+    rawContent = fs.readFileSync(filePath, 'utf-8');
+    rawContent = rawContent.replace(/<svg[^>]*>|<\/svg>/g, '');
+  } catch (err) {
+  console.error(`Pipeline error: Failed to find file asset for kind ${kind} in ${filePath}`);
+  }
+
+  return { kind, html: rawContent };
+});
+
+interface Node {
+  id: string;
+  label: string;
+  kind: 'person' | 'business' | 'shell' | 'organization' | 'charity' | 'asset' | 'bank-account' | 'location' | 'transaction' | 'bank' | 'legal-case' | 'group';
+}
+
+interface Edge {
+  kind?: 'directional' | 'bidirectional' | 'hidden' | 'indirect' | 'dashed';
+  source: string;
+  target: string;
+  label?: string;
+}
+
+interface Props {
+  nodes: Node[];
+  edges: Edge[];
+  distance?: number;
+}
+
+function formatLabel(kind: string) {
+  return kind
+    .split('-')
+    .map(word => word.charAt(0).toUpperCase() + word.slice(1))
+    .join(' ');
+}
+
+const { 
+  nodes: rawNodes = [],
+  edges: rawEdges = [],
+  distance = 240,
+} = Astro.props;
+
+// Clone data payloads cleanly to avoid mutation side effects
+const activeNodes = rawNodes.map(n => ({ ...n }));
+const activeEdges = rawEdges.map(e => ({ ...e }));
+
+// Optional structural verification node insertion safely executed post-cloning
+if (activeNodes.length === 0) {
+  activeNodes.push({
+    id: 'fallback-test-1',
+    label: 'Test Node 1',
+    kind: 'person',
+  });
+  activeNodes.push({
+    id: 'fallback-test-2',
+    label: 'Test Node 2',
+    kind: 'person',
+  });
+  activeNodes.push({
+    id: 'fallback-test-3',
+    label: 'Test Account',
+    kind: 'bank-account',
+  })
+
+  activeEdges.push({
+    kind: "dashed",
+    source: `fallback-test-1`,
+    target: `fallback-test-2`,
+  })
+  activeEdges.push({
+    label: "Owner",
+    kind: "bidirectional",
+    source: `fallback-test-1`,
+    target: `fallback-test-3`,
+  })
+  activeEdges.push({
+    label: "Owner",
+    kind: "bidirectional",
+    source: `fallback-test-2`,
+    target: `fallback-test-3`,
+  })
+}
+
+const { nodes, edges } = calculateStaticNetworkLayout(activeNodes, activeEdges, {
+  width: 800,
+  height: 600,
+  distance: distance,
+});
+
+function getNodesList() {
+  const items = nodes.map((node) => `<li>${node.kind}</li>`);
+  return `<ul>${items}</ul>`
+}
+
+function getEdgesList() {
+  const items = edges.map((edge) => `<li>${edge.kind}</li>`);
+  return `<ul>${items}</ul>`
+}
+---
+<div class="graph-container">
+  <svg 
+    class="graph"
+    viewBox="0 0 800 600"
+    preserveAspectRatio="xMidYMid meet" >
+    <defs>
+      {iconRegistry.map(({ kind, html }) => (
+        <g id={`${kind}`} set:html={html} />
+      ))}
+
+      <marker
+        id="arrow-forward"
+        viewBox="0 0 10 10"
+        refX="26"
+        refY="5"
+        markerWidth="6"
+        markerHeight="6"
+        orient="auto-start-reverse" >
+        <path d="M 0 1.5 L 10 5 L 0 8.5 z" fill="context-stroke" />
+      </marker>
+
+      <marker
+        id="arrow-backward"
+        viewBox="0 0 10 10"
+        refX="26"                
+        refY="5"
+        markerWidth="6"
+        markerHeight="6"
+        orient="auto-start-reverse" >
+        <path d="M 0 1.5 L 10 5 L 0 8.5 z" fill="context-stroke" />
+      </marker>
+    </defs>
+
+    <g class="edges">
+    {edges && edges.map((edge) =>{
+      const dx = edge.target.x - edge.source.x;
+      const dy = edge.target.y - edge.source.y;
+      const midX = (edge.source.x + edge.target.x) / 2;
+      const midY = (edge.source.y + edge.target.y) / 2;
+      let angle = Math.atan2(dy, dx) * (180 / Math.PI);
+      if (angle > 90 || angle < -90) {
+        angle -= 180;
+      }
+
+      let markerEnd = "none";
+      let markerStart = "none";
+      let dashed = "none";
+      let color = "#FFF";
+
+      if (edge.kind === "directional")  {
+        markerEnd = "url(#arrow-forward)";
+      } else if(edge.kind === "bidirectional") {
+        markerEnd = "url(#arrow-forward)";
+        markerStart = "url(#arrow-backward)";
+      } else if(edge.kind === "hidden" || edge.kind === "indirect" || edge.kind === "dashed") {
+        dashed = "8 8";
+      }
+
+      return (
+        <g class="edge-group">
+           <line 
+              x1={edge.source.x} 
+              y1={edge.source.y} 
+              x2={edge.target.x} 
+              y2={edge.target.y} 
+              stroke={color} 
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-dasharray={dashed}
+              marker-end={markerEnd}
+              marker-start={markerStart} />
+
+            {edge.label && (
+              <g transform={`translate(${midX}, ${midY}) rotate(${angle})`}>
+                <text
+                  text-anchor="middle"
+                  dy="-4"
+                  class="edge-label-bg" >
+                  {edge.label}
+                </text>
+
+                <text
+                  text-anchor="middle"
+                  dy="-4"
+                  class="edge-label" >
+                  {edge.label}
+                </text>
+              </g>
+            )}
+          </g>
+        );
+    } )}
+    </g>
+
+    <g class="nodes">
+      {nodes && nodes.map((node) => {
+        const nodeColor =  '#FFF';
+        return (
+          <g transform={`translate(${node.x}, ${node.y})`} class="node-group">
+            <circle
+              r="20"
+              fill="#FFF"
+              stroke={nodeColor}
+              stroke-width="1.5"
+              class="node-bg" />
+
+            <use 
+              href={`#${node.kind}`} 
+              x="-12" 
+              y="-12" 
+              width="24" 
+              height="24" 
+              stroke={nodeColor} 
+              fill={nodeColor} 
+            />
+
+            <text
+              y="32"
+              text-anchor="middle"
+              class="graph-label">
+              {node.label}
+            </text>
+          </g>
+        );
+      })}
+    </g>
+  </svg>
+
+  <div class="legend">
+    <ul>
+      {kinds.map((kind) => {
+        return (
+          <li data-kind={kind}>
+            <svg viewBox="0 0 40 40" width="100%" height="100%" xmlns="http://w3.org">
+              <circle
+                cx="20"
+                cy="20"
+                r="18"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+              />
+              <use 
+                href={`#${kind}`} 
+                x="8" 
+                y="8" 
+                width="24" 
+                height="24" 
+                stroke="currentColor" 
+              />
+            </svg>
+            <span>{formatLabel(kind)}</span>
+          </li>
+        );
+      })}
+    </ul>
+  </div>
+</div>

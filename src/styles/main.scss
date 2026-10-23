@@ -12,6 +12,7 @@
 @forward "threads";
 @forward "timeline";
 @forward "chip";
+@forward "network";
 
 *,
 *::before,
@@ -34,6 +35,8 @@ html,
 body {
   width: 100dvw;
   height: 100dvh;
+  display: flex;
+  flex-flow: column;
 }
 
 a {

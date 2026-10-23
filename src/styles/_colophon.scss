@@ -1,13 +1,10 @@
 .colophon {
-  display: grid;
-  grid-template-columns: 1fr auto;
+  display: flex;
+  flex-flow: row;
   align-items: center;
   gap: 2rem;
 
-  padding-left: 2rem;
-  padding-right: 2rem;
-  padding-top: 1rem;
-  padding-bottom: 1rem;
+  padding: 1rem;
 
   color: var(--chrome-2);
   background: var(--chrome);
@@ -23,7 +20,15 @@
 
   overflow: hidden;
 
+  span.series {
+    display: inline-flex;
+    align-items: center;
+  }
+
   .prov {
+    display: inline-flex;
+    align-items: center;
+    flex-grow: 1;
     *:nth-child(n + 2)::before {
       content: "|";
       margin: 0 0.5em;
@@ -32,10 +37,9 @@
   }
 
   .vault {
-    display: flex;
+    display: inline-flex;
     align-items: center;
     gap: 0.5rem;
-    flex-shrink: 0;
 
     transform: translateZ(0);
 

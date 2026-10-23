@@ -9,6 +9,7 @@ interface Props {
   link?: string,
   commit?: string,
   timestamp?: string,
+  series?: string,
 }
 
 const {
@@ -17,9 +18,13 @@ const {
   link = '',
   commit = '',
   timestamp = '',
+  series = '',
 } = Astro.props;
 ---
 <footer class="colophon">
+  { series &&
+    <span class="series">{series}</span> }
+
   <div class="prov">
     {license &&
       <span class="license">{license}</span>}

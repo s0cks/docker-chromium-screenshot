@@ -283,3 +283,13 @@ label: Source and build notes
 
 ```heatmap
 ```
+
+---
+
+## Network Graph
+
+```network
+nodes:
+- name: test
+  kind: person
+```
