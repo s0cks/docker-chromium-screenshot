@@ -12,6 +12,7 @@ import Timeline from './blocks/Timeline.astro';
 import NetworkGraph from './blocks/NetworkGraph.astro';
 import Treemap from './blocks/Treemap.astro';
 import Chord from "./blocks/Chord.astro";
+import Sankey from "./blocks/Sankey.astro";
 
 /** fence name -> component. Add a block here and in BLOCKS (src/lib/dossier.js). */
 const registry = {
@@ -28,6 +29,7 @@ const registry = {
   network: NetworkGraph,
   treemap: Treemap,
   chord: Chord,
+  sankey: Sankey,
 };
 
 const { node } = Astro.props;

@@ -8,6 +8,7 @@ import { renderTimeline as renderTimelineD3 } from "./timeline-d3.js";
 import { renderNetworkGraph as renderNetworkGraphD3 } from "./network-graph.js";
 import { renderTreemap as renderTreemapD3 } from "./treemap.js";
 import { renderChord as renderChordD3 } from "./chord-d3.js";
+import { renderSankey as renderSankeyD3 } from "./sankey-d3.js";
 
 const STATUS_TONE = {
   open: "accent",
@@ -174,6 +175,8 @@ const RENDERERS = {
     renderTreemapD3(container, node.data, node.attrs ?? {}),
   chord: (container, node) =>
     renderChordD3(container, node.data, node.attrs ?? {}),
+  sankey: (container, node) =>
+    renderSankeyD3(container, node.data, node.attrs ?? {}),
 };
 
 /** Render one parsed node ({ kind: 'md', md } or { kind: 'block', name, ... }) into container. */
