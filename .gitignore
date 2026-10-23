@@ -3,6 +3,9 @@ out/
 *.diff
 *.patch
 .rumdl_cache/
+cards-old/
+brand/
 old-docs/
 node_modules/
 .astro/
+cards/
