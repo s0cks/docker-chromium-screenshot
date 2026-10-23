@@ -1,0 +1,63 @@
+.grid {
+  width: 100%;
+  height: 100%;
+
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  grid-template-rows: 1fr 1fr;
+
+  container: grid / size;
+
+  &.grid-1x1 {
+    place-items: center;
+    grid-template-columns: 1fr;
+    grid-template-rows: 1fr;
+    grid-template-areas: "main";
+
+    & > :nth-child(1) {
+      grid-area: main;
+    }
+  }
+
+  &.grid-1x2 {
+    grid-template-areas:
+      "left right-top"
+      "left right-bottom";
+
+    & > :nth-child(1) {
+      grid-area: left;
+    }
+
+    & > :nth-child(2) {
+      grid-area: right-top;
+    }
+
+    & > :nth-child(3) {
+      grid-area: right-bottom;
+    }
+  }
+
+  .grid-2x1 {
+    grid-template-areas:
+      "left-top right"
+      "left-bottom right";
+
+    & > :nth-child(1) {
+      grid-area: left-top;
+    }
+
+    & > :nth-child(2) {
+      grid-area: left-bottom;
+    }
+
+    & > :nth-child(3) {
+      grid-area: right;
+    }
+  }
+
+  .grid-2x2 {
+    grid-template-areas:
+      "left-top right-top"
+      "left-bottom right-bottom";
+  }
+}

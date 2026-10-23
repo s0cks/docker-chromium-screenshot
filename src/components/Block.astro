@@ -10,9 +10,23 @@ import Stats from './blocks/Stats.astro';
 import Threads from './blocks/Threads.astro';
 import Timeline from './blocks/Timeline.astro';
 import NetworkGraph from './blocks/NetworkGraph.astro';
+import Treemap from './blocks/Treemap.astro';
 
 /** fence name -> component. Add a block here and in BLOCKS (src/lib/dossier.js). */
-const registry = { callout: Callout, chart: Chart, findings: Findings, profile: Profile, qr: Qr, quote: Quote, sources: Sources, stats: Stats, threads: Threads, timeline: Timeline, network: NetworkGraph };
+const registry = {
+  callout: Callout,
+  chart: Chart,
+  findings: Findings,
+  profile: Profile,
+  qr: Qr,
+  quote: Quote,
+  sources: Sources,
+  stats: Stats,
+  threads: Threads,
+  timeline: Timeline,
+  network: NetworkGraph,
+  treemap: Treemap,
+};
 
 const { node } = Astro.props;
 const Component = registry[node.name];

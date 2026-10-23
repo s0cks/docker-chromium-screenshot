@@ -6,6 +6,7 @@ import { el } from "./dom.js";
 import { renderChart } from "./chart-d3.js";
 import { renderTimeline as renderTimelineD3 } from "./timeline-d3.js";
 import { renderNetworkGraph as renderNetworkGraphD3 } from "./network-graph.js";
+import { renderTreemap as renderTreemapD3 } from "./treemap.js";
 
 const STATUS_TONE = {
   open: "accent",
@@ -168,6 +169,8 @@ const RENDERERS = {
     renderChart(container, node.data, node.attrs ?? {}),
   network: (container, node) =>
     renderNetworkGraphD3(container, node.data, node.attrs ?? {}),
+  treemap: (container, node) =>
+    renderTreemapD3(container, node.data, node.attrs ?? {}),
 };
 
 /** Render one parsed node ({ kind: 'md', md } or { kind: 'block', name, ... }) into container. */
@@ -176,11 +179,13 @@ export function renderNode(container, node) {
     container.append(el("div", { class: "prose", html: md(node.md ?? "") }));
     return;
   }
+
   const render = RENDERERS[node.name];
   if (!render) {
     console.warn(`live renderer: unknown block "${node.name}"`);
     return;
   }
+
   const holder =
     node.attrs?.w === "half" ? el("div", { "data-w": "half" }) : container;
   render(holder, node);

@@ -1,3 +1,6 @@
+@forward "masthead";
+@forward "colophon";
+
 @forward "tokens";
 @forward "prose";
 @forward "callout";
@@ -13,6 +16,7 @@
 @forward "timeline";
 @forward "chip";
 @forward "network";
+@forward "treemap";
 
 *,
 *::before,
@@ -37,6 +41,24 @@ body {
   height: 100dvh;
   display: flex;
   flex-flow: column;
+
+  header,
+  footer {
+    flex-shrink: 1;
+  }
+
+  article {
+    flex-grow: 1;
+    padding: 0.5rem 1.5rem;
+
+    & :nth-child(n) {
+      margin-bottom: 0.25em;
+    }
+
+    & :last-child {
+      margin-bottom: 0;
+    }
+  }
 }
 
 a {

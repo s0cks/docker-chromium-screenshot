@@ -1,0 +1,128 @@
+---
+import * as d3 from "d3";
+
+interface Node {
+  label: string;
+  value?: number;
+  children?: Node[];
+  color?: string;
+}
+
+interface Props {
+  rootNode?: Node;
+  width?: number;
+  height?: number;
+  padding?: number;
+  mode?: 'fill' | 'dot';
+}
+
+const defaultNode: Node = {
+  label: "Root",
+  color: "#1e293b",
+  children: [
+    { label: "Alpha", value: 400, color: "#3b82f6" },
+    { label: "Beta", value: 300, color: "#10b981" },
+    { 
+      label: "Gamma", 
+      color: "#6366f1",
+      children: [
+        { label: "Gamma-1", value: 150, color: "#8b5cf6" },
+        { label: "Gamma-2", value: 50, color: "#ec4899" }
+      ]
+    }
+  ],
+};
+
+const defaultPadding = 1;
+const defaultMode = 'dot';
+
+const {
+  rootNode = defaultNode,
+  padding = defaultPadding,
+  mode = defaultMode,
+} = Astro.props;
+
+const hierarchyRoot = d3.hierarchy<Node>(rootNode)
+  .sum(d => d.value || 0)
+  .sort((a, b) => (b.value || 0) - (a.value || 0));
+
+const treemapLayout = d3.treemap<Node>()
+  .tile(d3.treemapSquarify)
+  .size([ 100, 100 ])
+  .padding(padding);
+
+treemapLayout(hierarchyRoot);
+const leaves = hierarchyRoot.leaves();
+---
+{leaves && leaves.length > 0 && (
+<div
+  class="chart-container" >
+    <svg
+      preserveAspectRatio="none">
+      {leaves.map((leaf) => {
+        const left = `${leaf.x0}%`;
+        const top = `${leaf.y0}%`;
+        const width = `${leaf.x1 - leaf.x0}%`;
+        const height = `${leaf.y1 - leaf.y0}%`;
+        const fill = leaf.data.color || leaf.parent?.data.color || "#FFFFFF";
+        return (
+          <svg x={left} y={top} width={width} height={height} class="treemap-node" overflow="visible">
+            {mode === "dot" && (
+              <rect
+                width="100%"
+                height="100%"
+                fill="var(--panel)"
+                stroke="var(--ink)"
+                rx={4} />
+
+              <circle 
+                cx="16"
+                cy="16"
+                r="6"
+                fill={fill} />
+            )}
+
+          {mode === "fill" && (
+              <rect
+                width="100%"
+                height="100%"
+                fill={fill}
+                rx={4} />
+            )}
+
+            <text
+              x={mode === "dot" ? 32 : 12}
+              y={20}
+              fill="var(--ink)"
+              font-size="13px"
+              font-family="monospace" >
+              {leaf.data.label}
+            </text>
+          </svg>
+          );
+        })}
+    </svg>
+  </div>
+)}
+
+<style lang="scss">
+    div.chart-container {
+      display: grid;
+      place-items: center;
+
+      width: 100%;
+      height: 100%;
+
+      background-color: purple;
+
+      margin: 0;
+      padding: 0.5em;
+
+      svg {
+        width: 100%;
+        height: 100%;
+        display: block;
+        object-fit: fill;
+      }
+    }
+</style>

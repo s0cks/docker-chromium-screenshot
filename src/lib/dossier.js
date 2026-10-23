@@ -16,26 +16,27 @@
 //
 // Anything that is not a registered block is plain Markdown (GFM).
 
-import fs from 'node:fs';
-import path from 'node:path';
-import YAML from 'yaml';
+import fs from "node:fs";
+import path from "node:path";
+import YAML from "yaml";
 
-import { md, mdi } from './markdown.js';
+import { md, mdi } from "./markdown.js";
 export { md, mdi };
 
 /** Registered blocks and how their fenced body is parsed. */
 export const BLOCKS = {
-  callout: 'md',
-  quote: 'md',
-  stats: 'yaml',
-  findings: 'yaml',
-  threads: 'yaml',
-  timeline: 'yaml',
-  chart: 'yaml',
-  profile: 'yaml',
-  sources: 'yaml',
-  qr: 'yaml',
+  callout: "md",
+  quote: "md",
+  stats: "yaml",
+  findings: "yaml",
+  threads: "yaml",
+  timeline: "yaml",
+  chart: "yaml",
+  profile: "yaml",
+  sources: "yaml",
+  qr: "yaml",
   network: "yaml",
+  treemap: "yaml",
 };
 
 export const SIZE_PRESETS = {
@@ -49,17 +50,20 @@ export const SIZE_PRESETS = {
 
 export const DEFAULT_WORD_BUDGET = 200;
 
-export function parseSize(size = 'landscape') {
+export function parseSize(size = "landscape") {
   if (Array.isArray(size)) return size.map(Number);
   const key = String(size).toLowerCase();
   if (SIZE_PRESETS[key]) return SIZE_PRESETS[key];
   const m = key.match(/^(\d{3,5})\s*x\s*(\d{3,5})$/);
-  if (!m) throw new Error(`invalid size "${size}" (use WxH or one of: ${Object.keys(SIZE_PRESETS).join(', ')})`);
+  if (!m)
+    throw new Error(
+      `invalid size "${size}" (use WxH or one of: ${Object.keys(SIZE_PRESETS).join(", ")})`,
+    );
   return [Number(m[1]), Number(m[2])];
 }
 
 /** `tone=red mono w=half title="Two words"` -> { tone: 'red', mono: true, ... } */
-export function parseAttrs(str = '') {
+export function parseAttrs(str = "") {
   const attrs = {};
   const re = /([\w-]+)(?:=("[^"]*"|'[^']*'|\S+))?/g;
   let m;
@@ -67,8 +71,8 @@ export function parseAttrs(str = '') {
     let v = m[2];
     if (v === undefined) v = true;
     else if (/^["']/.test(v)) v = v.slice(1, -1);
-    else if (v === 'true') v = true;
-    else if (v === 'false') v = false;
+    else if (v === "true") v = true;
+    else if (v === "false") v = false;
     attrs[m[1]] = v;
   }
   return attrs;
@@ -86,7 +90,8 @@ function expandSnippets(body, snippets = {}, where) {
   for (let depth = 0; depth < 5; depth++) {
     let hit = false;
     out = out.replace(/^@include\s+([\w-]+)\s*$/gm, (_, name) => {
-      if (!(name in snippets)) throw new Error(`${where}: unknown snippet "${name}"`);
+      if (!(name in snippets))
+        throw new Error(`${where}: unknown snippet "${name}"`);
       hit = true;
       return String(snippets[name]).trim();
     });
@@ -110,19 +115,24 @@ function splitSlides(body) {
     if (!fence && /^---\s*$/.test(line)) slides.push([]);
     else slides.at(-1).push(line);
   }
-  return slides.map((l) => l.join('\n')).filter((s) => s.trim());
+  return slides.map((l) => l.join("\n")).filter((s) => s.trim());
 }
 
 function collectText(value, out = []) {
-  if (typeof value === 'string') out.push(value);
+  if (typeof value === "string") out.push(value);
   else if (Array.isArray(value)) value.forEach((v) => collectText(v, out));
-  else if (value && typeof value === 'object') Object.values(value).forEach((v) => collectText(v, out));
+  else if (value && typeof value === "object")
+    Object.values(value).forEach((v) => collectText(v, out));
   return out;
 }
 
-const countWords = (text) => (text.replace(/<[^>]+>/g, ' ').match(/[\p{L}\p{N}][\p{L}\p{N}'’.,%$-]*/gu) ?? []).length;
+const countWords = (text) =>
+  (
+    text.replace(/<[^>]+>/g, " ").match(/[\p{L}\p{N}][\p{L}\p{N}'’.,%$-]*/gu) ??
+    []
+  ).length;
 
-export function parseSlide(source, { where = 'slide', index = 0 } = {}) {
+export function parseSlide(source, { where = "slide", index = 0 } = {}) {
   const slide = {
     index,
     title: null,
@@ -132,16 +142,16 @@ export function parseSlide(source, { where = 'slide', index = 0 } = {}) {
     hasBreak: false,
     words: 0,
   };
-  let region = 'lead';
+  let region = "lead";
   let mdLines = [];
   let words = 0;
 
   const flush = () => {
-    const text = mdLines.join('\n').trim();
+    const text = mdLines.join("\n").trim();
     mdLines = [];
     if (!text) return;
     words += countWords(text);
-    slide[region].push({ kind: 'md', html: md(text) });
+    slide[region].push({ kind: "md", html: md(text) });
   };
 
   const lines = source.split(/\r?\n/);
@@ -151,7 +161,8 @@ export function parseSlide(source, { where = 'slide', index = 0 } = {}) {
 
     if (f) {
       const [, ticks, name, rest] = f;
-      const kind = name === 'slide' ? 'slide' : name in BLOCKS ? BLOCKS[name] : null;
+      const kind =
+        name === "slide" ? "slide" : name in BLOCKS ? BLOCKS[name] : null;
       // collect the fenced body (until a closing fence at least as long)
       let j = i + 1;
       const body = [];
@@ -168,15 +179,15 @@ export function parseSlide(source, { where = 'slide', index = 0 } = {}) {
         continue;
       }
       flush();
-      const raw = body.join('\n');
+      const raw = body.join("\n");
       const ctx = `${where}, \`${name}\` block at slide line ${i + 1}`;
-      if (kind === 'slide') {
+      if (kind === "slide") {
         slide.config = { ...slide.config, ...parseYaml(raw, ctx) };
       } else {
-        const node = { kind: 'block', name, attrs: parseAttrs(rest) };
-        if (kind === 'yaml') {
+        const node = { kind: "block", name, attrs: parseAttrs(rest) };
+        if (kind === "yaml") {
           node.data = parseYaml(raw, ctx);
-          words += countWords(collectText(node.data).join(' '));
+          words += countWords(collectText(node.data).join(" "));
         } else {
           node.md = raw.trim();
           words += countWords(node.md);
@@ -189,7 +200,7 @@ export function parseSlide(source, { where = 'slide', index = 0 } = {}) {
 
     if (/^\+\+\+\s*$/.test(line)) {
       flush();
-      region = 'main';
+      region = "main";
       slide.hasBreak = true;
       continue;
     }
@@ -204,8 +215,8 @@ export function parseSlide(source, { where = 'slide', index = 0 } = {}) {
   flush();
 
   slide.words = words;
-  slide.layout = slide.config.layout ?? (slide.hasBreak ? 'split' : 'full');
-  slide.kicker = slide.config.kicker ?? slide.title ?? '';
+  slide.layout = slide.config.layout ?? (slide.hasBreak ? "split" : "full");
+  slide.kicker = slide.config.kicker ?? slide.title ?? "";
   return slide;
 }
 
@@ -217,7 +228,7 @@ function parseYaml(raw, ctx) {
   }
 }
 
-export function parseDossier(src, { id = 'dossier', file = id } = {}) {
+export function parseDossier(src, { id = "dossier", file = id } = {}) {
   const { meta, body } = splitFrontmatter(src);
   const [width, height] = parseSize(meta.size);
   const budget = meta.budget ?? DEFAULT_WORD_BUDGET;
@@ -226,11 +237,17 @@ export function parseDossier(src, { id = 'dossier', file = id } = {}) {
   const warnings = [];
 
   const slides = chunks.map((chunk, index) => {
-    const slide = parseSlide(chunk, { where: `${file}, slide ${index + 1}`, index });
+    const slide = parseSlide(chunk, {
+      where: `${file}, slide ${index + 1}`,
+      index,
+    });
     if (slide.words > budget) {
-      warnings.push(`slide ${index + 1}: ${slide.words} words exceeds the budget of ${budget}; split it or cut copy`);
+      warnings.push(
+        `slide ${index + 1}: ${slide.words} words exceeds the budget of ${budget}; split it or cut copy`,
+      );
     }
-    if (!slide.title) warnings.push(`slide ${index + 1}: no title (add a "## Title" line)`);
+    if (!slide.title)
+      warnings.push(`slide ${index + 1}: no title (add a "## Title" line)`);
     return slide;
   });
   if (!slides.length) throw new Error(`${file}: no slides found`);
@@ -239,18 +256,20 @@ export function parseDossier(src, { id = 'dossier', file = id } = {}) {
     id,
     file,
     meta: {
-      series: meta.series ?? 'Dossier',
-      subject: meta.subject ?? '',
-      part: meta.part ?? '',
-      author: meta.author ?? '',
-      ref: meta.ref ?? '',
-      license: meta.license ?? '',
-      link: meta.link ?? '',
+      series: meta.series ?? "Dossier",
+      subject: meta.subject ?? "",
+      part: meta.part ?? "",
+      author: meta.author ?? "",
+      ref: meta.ref ?? "",
+      license: meta.license ?? "",
+      link: meta.link ?? "",
       logo: meta.logo ?? null,
-      theme: meta.theme === 'dark' ? 'dark' : 'light',
-      accent: meta.accent ?? 'purple',
+      theme: meta.theme === "dark" ? "dark" : "light",
+      accent: meta.accent ?? "purple",
       provenance: Boolean(meta.provenance),
-      title: meta.title ?? ([meta.subject, meta.part].filter(Boolean).join(' - ') || id),
+      title:
+        meta.title ??
+        ([meta.subject, meta.part].filter(Boolean).join(" - ") || id),
     },
     size: { width, height },
     slides,
@@ -259,7 +278,7 @@ export function parseDossier(src, { id = 'dossier', file = id } = {}) {
 }
 
 export function cardsDir() {
-  return path.resolve(process.env.CARDS_DIR ?? 'cards');
+  return path.resolve(process.env.CARDS_DIR ?? "cards");
 }
 
 const LOGO_RE = /^logo\.(png|jpe?g|svg|webp)$/i;
@@ -275,7 +294,7 @@ export function listCardDirs(dir = cardsDir()) {
   if (!fs.existsSync(dir)) return [];
   return fs
     .readdirSync(dir, { withFileTypes: true })
-    .filter((e) => e.isDirectory() && !e.name.startsWith('_'))
+    .filter((e) => e.isDirectory() && !e.name.startsWith("_"))
     .map((e) => e.name)
     .sort();
 }
@@ -295,13 +314,16 @@ function detectLogo(id, cardDir) {
  */
 export function loadDossiers(dir = cardsDir()) {
   return listCardDirs(dir)
-    .filter((id) => fs.existsSync(path.join(dir, id, 'card.md')))
+    .filter((id) => fs.existsSync(path.join(dir, id, "card.md")))
     .map((id) => {
       const cardDir = path.join(dir, id);
-      const dossier = parseDossier(fs.readFileSync(path.join(cardDir, 'card.md'), 'utf8'), { id, file: `${id}/card.md` });
+      const dossier = parseDossier(
+        fs.readFileSync(path.join(cardDir, "card.md"), "utf8"),
+        { id, file: `${id}/card.md` },
+      );
       if (!dossier.meta.logo) dossier.meta.logo = detectLogo(id, cardDir);
       return dossier;
     });
 }
 
-export const pad = (n) => String(n).padStart(2, '0');
+export const pad = (n) => String(n).padStart(2, "0");
