@@ -1,0 +1,85 @@
+---
+// https://uiverse.io/cbolson/calm-wasp-75
+
+interface Item {
+  state: boolean;
+  name: string;
+  icon?: string;
+}
+
+interface ChecklistData {
+  items: Item[];
+}
+
+interface Props {
+  data: ChecklistData | Item[];
+}
+
+const { data } = Astro.props;
+const items = Array.isArray(data) ? data : (data.items ?? []);
+---
+<ul>
+  {items && items.map((item) => {
+    return (
+      <li class=`${item.state && "enabled"}`>
+        <span data-enabled={item.state} class="status"></span>
+        <span>{item.name}</span>
+      </li>
+    )
+    }) }
+</ul>
+
+<style lang="scss">
+  ul {
+    margin: 0;
+    padding: 1em;
+
+    list-style: none;
+
+    background-color: var(--panel);
+
+    & > :first-child {
+      padding-top: 0;
+    }
+
+    & > :nth-child(n) {
+      padding-top: 0.25em;
+      padding-bottom: 0.25em;
+      border-bottom: 1px solid var(--ink);
+    }
+
+    & > :last-child {
+      padding-bottom: 0;
+      border-bottom: none;
+    }
+
+    li {
+      display: flex;
+      flex-direction: row;
+
+      font-size: 16px;
+      padding: 0 1em;
+      gap: 1em;
+
+      justify-content: flex-start;
+      align-items: center;
+
+      &.enabled {
+        span.status {
+          background-color: green;
+        }
+      }
+
+      span.status {
+        flex-shrink: 1;
+        aspect-ratio: 1;
+        max-width: 5cqw;
+        background-color: red;
+      }
+
+      span {
+        flex-grow: 1;
+      }
+    }
+  }
+</style>

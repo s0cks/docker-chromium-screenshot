@@ -1,0 +1,127 @@
+---
+import fs from "node:fs";
+import path from "node:path";
+import { mdi } from '../../lib/dossier.js';
+const { md: data, attrs } = Astro.props;
+
+const iconKind = attrs.icon ?? "person";
+const iconsDir = path.join("src", "assets", "nodes");
+const kinds = [
+  "asset",
+  "bank-account",
+  "bank",
+  "business",
+  "charity",
+  "group",
+  "legal-case",
+  "location",
+  "organization",
+  "person",
+  "shell",
+  "test",
+  "transaction",
+  "wallet",
+];
+
+const socialColor = [
+  "facebook",
+  "twitter",
+];
+
+const iconRegistry = kinds.map(kind => {
+  const filePath = path.join(iconsDir, `${kind}.svg`);
+
+  let rawContent = '';
+  try {
+    rawContent = fs.readFileSync(filePath, 'utf-8');
+  } catch (err) {
+    return { kind, html: `<span>failed to load ${filePath}: ${err}` };
+  }
+
+  return { kind, html: rawContent };
+});
+
+const icon = iconRegistry.filter(({kind, html}) =>  kind === iconKind )[0];
+---
+
+<div class="container">
+  <div class="post">
+    {data && 
+      (<main set:html={mdi(data)} />) }
+
+    <footer>
+      {attrs.user &&
+      <h1>{attrs.user}</h1> }
+
+      <div class={`icon-container ${attrs.social ?? ""}`}>
+        <Fragment set:html={icon.html} />
+      </div>
+    </footer>
+  </div>
+</div>
+
+<style lang="scss">
+  div.post {
+    display: flex;
+    flex-direction: column;
+
+    gap: 1em;
+    padding: 1.5em 3em;
+    background-color: var(--panel);
+
+    header,
+    footer {
+      flex-shrink: 1;
+      max-height: 33cqh;
+    }
+
+    header { 
+    }
+
+    main {
+      flex-grow: 1;
+    }
+
+    footer {
+      display: flex;
+      flex-direction: row;
+      gap: 0.5em;
+
+      margin: 0;
+      padding: 0;
+
+      h1, h2, h3, h4, h5, h6 {
+        padding-left: 0.5em;
+        flex-grow: 1;
+
+        display: inline-flex;
+        justify-content: flex-end;
+        align-items: center;
+      }
+
+      div.icon-container {
+        display: block;
+        flex-shrink: 0;
+        aspect-ratio: 1;
+
+        width: 5cqw;
+
+        container-type: inline-size;
+
+        border-radius: 32px;
+        padding: 0.5em;
+
+        background-color: var(--rule);
+
+        :global(svg) {
+          color: var(--ink);
+        }
+
+        &.facebook {
+          background-color: blue;
+          :global(svg){  color: cornflowerblue; }
+        }
+      }
+    }
+  }
+</style>

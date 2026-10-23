@@ -136,6 +136,12 @@ export function renderProfile(container, node) {
   container.append(wrap);
 }
 
+export function renderPost(container, node) {
+  container.append(el("p", { text: "Hello World" }));
+}
+
+export function renderChecklist(container, node) {}
+
 export function renderSources(container, node) {
   const { data } = node;
   const list = items(data);
@@ -159,6 +165,8 @@ export function renderSources(container, node) {
 
 const RENDERERS = {
   callout: renderCallout,
+  post: renderPost,
+  checklist: renderChecklist,
   quote: renderQuote,
   stats: renderStats,
   findings: renderFindings,

@@ -19,6 +19,7 @@
 @forward "chip";
 @forward "network";
 @forward "treemap";
+@forward "image";
 
 *,
 *::before,
@@ -44,8 +45,8 @@ body {
   display: flex;
   flex-flow: column;
 
-  header,
-  footer {
+  & > header,
+  & > footer {
     flex-shrink: 1;
   }
 

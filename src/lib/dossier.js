@@ -39,6 +39,9 @@ export const BLOCKS = {
   treemap: "yaml",
   chord: "yaml",
   sankey: "yaml",
+  post: "md",
+  checklist: "yaml",
+  image: "md",
 };
 
 export const SIZE_PRESETS = {

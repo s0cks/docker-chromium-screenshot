@@ -13,6 +13,9 @@ import NetworkGraph from './blocks/NetworkGraph.astro';
 import Treemap from './blocks/Treemap.astro';
 import Chord from "./blocks/Chord.astro";
 import Sankey from "./blocks/Sankey.astro";
+import Post from "./blocks/Post.astro";
+import Checklist from "./blocks/Checklist.astro";
+import Image from "./blocks/Image.astro";
 
 /** fence name -> component. Add a block here and in BLOCKS (src/lib/dossier.js). */
 const registry = {
@@ -30,6 +33,9 @@ const registry = {
   treemap: Treemap,
   chord: Chord,
   sankey: Sankey,
+  post: Post,
+  checklist: Checklist,
+  image: Image,
 };
 
 const { node } = Astro.props;

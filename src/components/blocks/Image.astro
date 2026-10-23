@@ -1,0 +1,12 @@
+---
+import { mdi } from '../../lib/dossier.js';
+const { md: data, attrs } = Astro.props;
+---
+<div class="image">
+  <div class="image-container">
+    <img src={attrs.source}
+         class={attrs.style ?? ""}/>
+  </div>
+  {data && 
+    (<span set:html={mdi(data)} />) }
+</div>
