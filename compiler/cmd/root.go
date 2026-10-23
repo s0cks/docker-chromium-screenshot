@@ -23,7 +23,11 @@ func getSource(args []string) ([]byte, error) {
 
 var RootCommand = &cobra.Command{
 	Use:  "compiler",
-	Args: cobra.ExactArgs(1),
+	Args: cobra.MaximumNArgs(1),
+	PersistentPreRunE: func(cmd *cobra.Command, args []string) error {
+		log.SetOutput(os.Stderr)
+		return nil
+	},
 	RunE: func(cmd *cobra.Command, args []string) error {
 		data, err := getSource(args)
 		if err != nil {

@@ -200,7 +200,7 @@ func countWords(s string) int {
 // slide, a total word count (for the caller's budget check — the budget
 // itself lives in frontmatter, not here), and any warnings (currently just
 // "no title").
-func CompileMarkdownBody(body string, divider string, where string) (ir.Slide, int, []string, error) {
+func CompileMarkdownBody(body string, divider string, where string) (string, ir.Slide, int, []string, error) {
 	if divider == "" {
 		divider = DefaultPanelDivider
 	}
@@ -234,7 +234,7 @@ func CompileMarkdownBody(body string, divider string, where string) (ir.Slide, i
 			}
 
 			if err := st.flush(); err != nil {
-				return ir.Slide{}, 0, nil, err
+				return "", ir.Slide{}, 0, nil, err
 			}
 
 			raw := strings.Join(fenceBody, "\n")
@@ -246,7 +246,7 @@ func CompileMarkdownBody(body string, divider string, where string) (ir.Slide, i
 			} else {
 				data, err := parseYAMLBody(raw, ctx)
 				if err != nil {
-					return ir.Slide{}, 0, nil, err
+					return "", ir.Slide{}, 0, nil, err
 				}
 
 				node.Data = data
@@ -260,11 +260,11 @@ func CompileMarkdownBody(body string, divider string, where string) (ir.Slide, i
 
 		if strings.TrimRight(line, " \t\r") == divider {
 			if st.panel+1 >= maxPanels {
-				return ir.Slide{}, 0, nil, fmt.Errorf("%s: more than %d panels (too many %q dividers)", where, maxPanels, divider)
+				return "", ir.Slide{}, 0, nil, fmt.Errorf("%s: more than %d panels (too many %q dividers)", where, maxPanels, divider)
 			}
 
 			if err := st.flush(); err != nil {
-				return ir.Slide{}, 0, nil, err
+				return "", ir.Slide{}, 0, nil, err
 			}
 
 			st.panel++
@@ -281,7 +281,7 @@ func CompileMarkdownBody(body string, divider string, where string) (ir.Slide, i
 	}
 
 	if err := st.flush(); err != nil {
-		return ir.Slide{}, 0, nil, err
+		return "", ir.Slide{}, 0, nil, err
 	}
 
 	var warnings []string
@@ -289,12 +289,12 @@ func CompileMarkdownBody(body string, divider string, where string) (ir.Slide, i
 		warnings = append(warnings, `no title (add a "## Title" line)`)
 	}
 
-	var title *string
+	var title string
 	if st.hasTitle {
-		title = &st.title
+		title = st.title
 	}
 
-	return ir.Slide{Title: title, Kicker: title, Panels: st.panels}, st.words, warnings, nil
+	return title, ir.Slide{Panels: st.panels}, st.words, warnings, nil
 }
 
 func parseYAMLBody(raw, ctx string) (any, error) {
@@ -526,7 +526,7 @@ func CompileMarkdown(src string, opts Options) (*ir.Card, Directives, []string, 
 		return nil, Directives{}, nil, err
 	}
 
-	slide, words, slideWarnings, err := CompileMarkdownBody(expanded, opts.Divider, opts.Where)
+	title, slide, words, slideWarnings, err := CompileMarkdownBody(expanded, opts.Divider, opts.Where)
 	if err != nil {
 		return nil, Directives{}, nil, err
 	}
@@ -568,6 +568,7 @@ func CompileMarkdown(src string, opts Options) (*ir.Card, Directives, []string, 
 		Accent: accent,
 		Size:   size,
 		Budget: budget,
+		Title:  title,
 		Provenance: &ir.Provenance{
 			Compiler: "markdown",
 			Commit:   opts.Provenance.Commit,

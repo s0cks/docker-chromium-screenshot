@@ -3,17 +3,17 @@ import Block from './Block.astro';
 import Colophon from './chrome/Colophon.astro';
 import Masthead from './chrome/Masthead.astro';
 
-const { dossier, slide } = Astro.props;
-const { meta, slides, size } = dossier;
-const nodes = [...slide.lead, ...slide.main];
+const { dossier } = Astro.props;
+const { meta, slide } = dossier;
+const nodes = [...slide.panels];
 
 const full = slide.layout === 'full';
 const nodeWidth = (n) => (n.kind === 'block' && n.attrs.w === 'half' ? 'half' : undefined);
 
 let sizeProfile = 'landscape';
-if (size.width === 1200 && size.height === 1200) {
+if (meta.size.width === 1200 && meta.size.height === 1200) {
   sizeProfile = 'square';
-} else if (size.width === 1080 && size.height === 1920) {
+} else if (meta.size.width === 1080 && meta.size.height === 1920) {
   sizeProfile = 'vertical';
 }
 

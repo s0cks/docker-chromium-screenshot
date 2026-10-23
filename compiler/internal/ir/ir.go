@@ -20,6 +20,7 @@ type Meta struct {
 	Accent string  `json:"accent"`
 	Size   any     `json:"size"` // string preset, or [width, height]
 	Logo   *string `json:"logo,omitempty"`
+	Title  string  `json:"title,omitempty"`
 	// LogoSet distinguishes "frontmatter didn't mention logo" (false — the
 	// orchestrator should auto-detect one) from "frontmatter set logo,
 	// including explicitly to null" (true — auto-detection must not
@@ -43,7 +44,6 @@ type Provenance struct {
 }
 
 type Slide struct {
-	Title  *string `json:"title,omitempty"`
 	Kicker *string `json:"kicker,omitempty"`
 	Panels []Panel `json:"panels"`
 }
