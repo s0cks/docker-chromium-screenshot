@@ -51,13 +51,12 @@ body {
 
   article {
     flex-grow: 1;
-    padding: 0.5rem 1.5rem;
 
-    & :nth-child(n) {
+    & > * {
       margin-bottom: 0.25em;
     }
 
-    & :last-child {
+    & > :last-child {
       margin-bottom: 0;
     }
   }
