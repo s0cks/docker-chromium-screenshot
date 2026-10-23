@@ -3,6 +3,6 @@ out/
 *.diff
 *.patch
 .rumdl_cache/
-docs/
+old-docs/
 node_modules/
 .astro/

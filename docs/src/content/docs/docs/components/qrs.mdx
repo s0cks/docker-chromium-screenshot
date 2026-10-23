@@ -1,0 +1,56 @@
+---
+title: QRs
+---
+
+import { Tabs, TabItem } from "@astrojs/starlight/components";
+
+QR components allow you to generate QRs from the supplied data
+during build
+
+## Example
+
+<Tabs>
+  <TabItem label="Markdown">
+
+    `````markdown
+
+    ```qr
+    link: github.com/s0cks/docker-chromium-screenshot
+    label: Scan Me
+    size: 32
+    ```
+    `````
+
+  </TabItem>
+  <TabItem label="YAML">
+
+    ```yaml
+    link: github.com/s0cks/docker-chromium-screenshot
+    label: Scan Me
+    size: 32
+    ```
+
+  </TabItem>
+  <TabItem label="JSON">
+
+    ```json
+    {
+      "link": "github.com/s0cks/docker-chromium-screenshot",
+      "label": "Scan Me",
+      "size": 32,
+    }
+    ```
+
+  </TabItem>
+  <TabItem label="Jsonnet">
+
+    ```jsonnet
+    {
+      link: "github.com/s0cks/docker-chromium-screenshot",
+      label: "Scan Me",
+      size: 32,
+    }
+    ```
+
+  </TabItem>
+</Tabs>

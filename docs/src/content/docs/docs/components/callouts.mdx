@@ -1,0 +1,105 @@
+---
+title: Callouts
+---
+
+import { Tabs, TabItem } from "@astrojs/starlight/components";
+
+A callout highlights a piece of information.
+
+## Attributes
+
+| Name | Type | Default | Description |
+|---|---|---|---|
+| `tone` | `tone` | `accent` | The tone - or color, of the callout. |
+| `mono` | `bool` | `false` | Render the body using monospace text. |
+
+## Example
+
+The body of a callout is written in Markdown.
+
+<Tabs>
+  <TabItem label="Markdown">
+
+    `````markdown
+    ```callout tone=ink mono=true
+    This is a *test*
+    ```
+    `````
+
+    ---
+
+    `````markdown
+    ```callout tone=accent
+    This is another *test*
+    ```
+    `````
+
+  </TabItem>
+  <TabItem label="YAML">
+
+    ```yaml
+    kind: Callout
+    attrs:
+      tone: ink
+      mono: true
+    body: |
+      This is a *test*
+    ```
+
+    ---
+
+    ```yaml
+    kind: Callout
+    attrs:
+      tone: accent
+    body: |
+      This is another *test*
+    ```
+
+  </TabItem>
+  <TabItem label="JSON">
+
+    ```json
+    {
+      "kind": "Callout",
+      "attrs": {
+        "tone": "ink",
+        "mono": true,
+      },
+      "body": "This is a *test*"
+    }
+    ```
+
+    ---
+
+    ```json
+    {
+      "kind": "Callout",
+      "attrs": {
+        "tone": "accent",
+      },
+      "body": "This is another *test*"
+    }
+    ```
+
+  </TabItem>
+  <TabItem label="Jsonnet">
+
+    ```jsonnet
+    local lib = "lib/docker-chromium-screenshot.libsonnet";
+    lib.Callout(|||
+      This is a *test*
+    |||, tone="ink", mono=true);
+    ```
+
+    ---
+
+    ```jsonnet
+    local lib = "lib/docker-chromium-screenshot.libsonnet";
+    lib.Callout(|||
+      This is another *test*
+    |||);
+    ```
+
+  </TabItem>
+</Tabs>
