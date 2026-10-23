@@ -10,8 +10,8 @@
 
 .graph-container {
   margin: 0 auto;
-  border: 1px solid blue;
   border-radius: 6px;
+  border: 0.5px solid var(--panel);
 
   display: flex;
   flex-direction: column;
@@ -96,7 +96,5 @@
     will-change: transform;
     text-rendering: optimizeLegibility;
     box-sizing: border-box;
-
-    border: 1px solid #222;
   }
 }
