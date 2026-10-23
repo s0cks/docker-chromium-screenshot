@@ -37,6 +37,7 @@ export const BLOCKS = {
   qr: "yaml",
   network: "yaml",
   treemap: "yaml",
+  chord: "yaml",
 };
 
 export const SIZE_PRESETS = {
